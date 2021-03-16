@@ -6,11 +6,8 @@ const sequelize = new Sequelize("neproblemka","mysql","mysql",{
     operatorsAliases: false
 })
 
-const client = require("./clientModel.js")(sequelize)
-// export default require("./clientModel.js")(sequelize)
-
-// module.exports = client
 module.exports = {
     sequelize: sequelize,
-    clientModel: client
+    clientModel: require("./clientModel.js").ClientModel(sequelize),
+    orderModel: require("./orderModel.js").OrderModel(sequelize),
 }

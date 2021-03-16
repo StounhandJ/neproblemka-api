@@ -1,8 +1,12 @@
 const Router = require('express').Router
-const getAll = require('../controllers/clientCntroller.js').getAll
+const clientController = require('../controllers/clientController.js')
 const router = Router()
 
-router.get('/api/client', getAll)
+router.get('/client.get/:id', clientController.get)
+
+router.get('/client.getall', clientController.getAll)
+
+router.post('/client.create', clientController.getAll)
 
 // router.post('/api/server', create)
 //
