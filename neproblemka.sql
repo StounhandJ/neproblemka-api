@@ -14,7 +14,7 @@ CREATE TABLE `cheque` (
   `amount` int NOT NULL,
   `date` int NOT NULL,
   `secretKey` varchar(255) NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `clients` (
@@ -22,7 +22,7 @@ CREATE TABLE `clients` (
   `mail` varchar(255) NOT NULL,
   `telegramID` int NOT NULL,
   `phoneNumber` int NOT NULL,
-  `state` tinyint(1) NOT NULL DEFAULT '0'
+  `state` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `documents` (
@@ -30,17 +30,17 @@ CREATE TABLE `documents` (
   `path` varchar(255) NOT NULL,
   `pathDisk` varchar(255) NOT NULL,
   `documentTelegramId` varchar(255) NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `orders` (
   `id` int NOT NULL,
   `idClient` int NOT NULL,
   `description` text NOT NULL,
-  `document` int DEFAULT NULL,
+  `document` int NOT NULL,
   `typeWorkID` int NOT NULL,
   `stateOfOrder` int NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `paymentorder` (
@@ -49,7 +49,7 @@ CREATE TABLE `paymentorder` (
   `price` int NOT NULL,
   `dateEnd` int NOT NULL,
   `promoCodeID` int NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `promocodes` (
@@ -59,13 +59,13 @@ CREATE TABLE `promocodes` (
   `discount` int NOT NULL,
   `typeOfCode` tinyint(1) NOT NULL,
   `limitUsing` int NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `typeofwork` (
   `id` int NOT NULL,
   `type` varchar(255) NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
