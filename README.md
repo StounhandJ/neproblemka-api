@@ -1,11 +1,11 @@
 # Список методов:
 
-- [**user.get**](#-user.get) – *Получить клиента*
-- [**user.getall**](#-user.getall) – *Получить всех клиентов*
-- [**user.create**](#-getupdates) – *Создать клиента*
+- [**user.get**](#-userget) – *Получить клиента*
+- [**user.getall**](#-usergetall) – *Получить всех клиентов*
+- [**user.create**](#-usercreate) – *Создать клиента*
 
-- [**order.get**](#-order.get) – *Получить заказ*
-- [**order.getall**](#-order.getall) – *Получить заказы*
+- [**order.get**](#-orderget) – *Получить заказ*
+- [**order.getall**](#-ordergetall) – *Получить заказы*
 
 # Описание методов: 
 
