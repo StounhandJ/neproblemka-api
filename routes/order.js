@@ -1,11 +1,35 @@
 const Router = require('express').Router
-const getAll = require('../controllers/orderController.js').getAll
+const orderController = require('../controllers/orderController.js')
+const validate = require("../lib/Validation")
+const { query } = require('express-validator')
 const router = Router()
 
-router.get('/api/order', getAll)
+router.get('/order', validate([
+    query('id').isInt()
+]), orderController.get)
 
-// router.post('/api/server', create)
-//
-// router.delete('/api/server/:id', remove)
+router.get('/order.all', validate([
+    query('idClient').isInt().optional(),
+    query('typeWorkID').isInt().optional(),
+    query('stateOfOrder').isInt().optional()
+]), orderController.getAll)
 
+
+router.post('/order.create', validate([
+    query('idClient').isInt(),
+    query('description').isString(),
+    query('documentID').isInt().optional(),
+    query('typeWorkID').isInt(),
+    query('stateOfOrder').isInt()
+]), orderController.create)
+
+
+router.post('/order.update', validate([
+    query('id').isInt(),
+    query('stateOfOrder').isInt()
+]), orderController.update)
+
+router.post('/order.del', validate([
+    query('id').isInt()
+]), orderController.del)
 module.exports = router

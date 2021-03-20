@@ -14,14 +14,14 @@ CREATE TABLE `cheque` (
   `amount` int NOT NULL,
   `date` int NOT NULL,
   `secretKey` varchar(255) NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `clients` (
   `id` int NOT NULL,
-  `mail` varchar(255) NOT NULL,
-  `telegramID` int NOT NULL,
-  `phoneNumber` int NOT NULL,
+  `mail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `telegramID` int DEFAULT NULL,
+  `phoneNumber` int DEFAULT NULL,
   `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -30,14 +30,14 @@ CREATE TABLE `documents` (
   `path` varchar(255) NOT NULL,
   `pathDisk` varchar(255) NOT NULL,
   `documentTelegramId` varchar(255) NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `orders` (
   `id` int NOT NULL,
   `idClient` int NOT NULL,
   `description` text NOT NULL,
-  `document` int DEFAULT NULL,
+  `documentID` int DEFAULT NULL,
   `typeWorkID` int NOT NULL,
   `stateOfOrder` int NOT NULL,
   `state` tinyint(1) NOT NULL DEFAULT '0'
@@ -49,7 +49,7 @@ CREATE TABLE `paymentorder` (
   `price` int NOT NULL,
   `dateEnd` int NOT NULL,
   `promoCodeID` int NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `promocodes` (
@@ -59,13 +59,13 @@ CREATE TABLE `promocodes` (
   `discount` int NOT NULL,
   `typeOfCode` tinyint(1) NOT NULL,
   `limitUsing` int NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `typeofwork` (
   `id` int NOT NULL,
   `type` varchar(255) NOT NULL,
-  `state` tinyint(1) NOT NULL
+  `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -86,7 +86,7 @@ ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`),
   ADD KEY `idClient` (`idClient`),
-  ADD KEY `document` (`document`),
+  ADD KEY `document` (`documentID`),
   ADD KEY `typeWorkID` (`typeWorkID`);
 
 ALTER TABLE `paymentorder`
@@ -131,7 +131,7 @@ ALTER TABLE `cheque`
 
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`idClient`) REFERENCES `clients` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`document`) REFERENCES `documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`documentID`) REFERENCES `documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`typeWorkID`) REFERENCES `typeofwork` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE `paymentorder`

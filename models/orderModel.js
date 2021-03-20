@@ -1,48 +1,10 @@
 const Sequelize = require("sequelize")
 
-class OrderClass{
-    id
-    idClient
-    description
-    document
-    typeWorkID
-    stateOfOrder
-    state
-
-    #example
-    constructor(id, idClient, description, document,typeWorkID,stateOfOrder, state, example)
-    {
-        this.id = id
-        this.idClient = idClient
-        this.description = description
-        this.document = document
-        this.typeWorkID = typeWorkID
-        this.stateOfOrder = stateOfOrder
-        this.state = state
-        this.#example = example
-    }
-
-    async delete()
-    {
-        this.state = 1
-        await OrderModel.SequelizeUpdateAll(this.#example, {state: this.state})
-    }
-
-    async save(){
-        await OrderModel.SequelizeUpdateAll(this.#example, {
-            idClient: this.idClient,
-            description: this.description,
-            typeWorkID: this.typeWorkID,
-            stateOfOrder: this.stateOfOrder
-        })
-    }
-}
-
 class OrderModel{
     static model
 
     static test(sequelize){
-        this.model = sequelize.define("client",{
+        this.model = sequelize.define("order",{
             id : {
                 type: Sequelize.INTEGER,
                 autoIncrement: true,
@@ -57,7 +19,7 @@ class OrderModel{
                 type:Sequelize.TEXT,
                 allowNull: false
             },
-            document : {
+            documentID : {
                 type:Sequelize.INTEGER,
                 allowNull: true,
                 default: null
@@ -76,52 +38,67 @@ class OrderModel{
                 default: 0
             }
         },{
-            timestamps: false,
-            tableName: "orders"
+            timestamps: false
         })
     }
 
-    static async SequelizeUpdateAll(sequelize, data)
+    static async create_order(idClient, description, documentID, typeWorkID, stateOfOrder)
     {
-        if (data["idClient"]!==undefined) sequelize.idClient = data["idClient"]
-        if (data["description"]!==undefined) sequelize.description = data["description"]
-        if (data["document"]!==undefined) sequelize.document = data["document"]
-        if (data["typeWorkID"]!==undefined) sequelize.typeWorkID = data["typeWorkID"]
-        if (data["stateOfOrder"]!==undefined) sequelize.stateOfOrder = data["stateOfOrder"]
-        if (data["state"]!==undefined) sequelize.state = data["state"]
-        await sequelize.save()
-    }
-
-    static async create_order(idClient, description, typeWorkID, stateOfOrder)
-    {
-        return this.#create_class(await this.model.create({
+        return await this.model.create({
             idClient: idClient,
             description: description,
+            documentID: documentID,
             typeWorkID: typeWorkID,
             stateOfOrder: stateOfOrder
-        }))
+        }).catch(() => {
+            return []
+        })
     }
 
     static async get_order(id)
     {
-        return this.#create_class(await this.model.findOne({
+        return await this.model.findOne({
             where:{
                 id: id
             }
-        }))
+        })
     }
 
-    static async #create_class(data)
+    static async get_orders(idClient, typeWorkID, stateOfOrder)
     {
-        return data?new OrderClass(data.id, data.idClient, data.description, data.document,data.typeWorkID,data.stateOfOrder, data.state, data):null
+        let data = {}
+        if (idClient!==undefined && idClient!==null) data["idClient"] = idClient
+        if (typeWorkID!==undefined && typeWorkID!==null) data["typeWorkID"] = typeWorkID
+        if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
+        return await this.model.findAll({
+            where: data
+        })
+    }
+
+    static async update_order(id, stateOfOrder)
+    {
+        let data = {}
+        if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
+
+        if (data!=={}){
+            await this.model.update(
+                data,
+                { where: { id: id } }
+            )
+        }
+    }
+
+    static async delete_order(id)
+    {
+        await this.model.update(
+            { state: 1 },
+            { where: { id: id } }
+        )
     }
 }
 
 
-module.exports = {
-    OrderModel: (sequelize)=>{
-        OrderModel.test(sequelize)
-        return OrderModel
-    },
-    OrderClass: OrderClass
+module.exports = (sequelize)=>{
+    OrderModel.test(sequelize)
+    return OrderModel
 }
