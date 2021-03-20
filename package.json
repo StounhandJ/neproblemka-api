@@ -7,7 +7,7 @@
   "contributors": [],
   "private": true,
   "scripts": {
-    "serve": "nodemon index.js",
+    "server": "nodemon index.js",
     "start": "node index.js"
   },
   "keywords": [
