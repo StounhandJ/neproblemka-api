@@ -3,7 +3,19 @@ const renderingJson = require('../lib/View').renderingJson
 
 
 async function get(req, res){
-    const promo = await promoCode.get_promoCode_id(req.query.id)
+   let promo
+    if (req.query.id !== undefined) {
+        promo = await promoCode.get_promoCode_id(req.query.id)
+
+    } 
+    else if(req.query.codeName !== undefined)
+    {
+        promo = await promoCode.get_promoCode_code(req.query.codeName)
+    }
+    else{
+        await renderingJson(res, 400)
+        return
+    }
     await renderingJson(res, JSON.stringify(promo) === JSON.stringify([])?404:200,promo)
 }
 

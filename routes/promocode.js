@@ -5,7 +5,8 @@ const validate = require("../lib/Validation")
 const { query } = require('express-validator')
 
 router.get("/promocode",validate([
-    query('id').isInt()
+    query('id').isInt().optional(),
+    query('codeName').isString().optional()
 ]), promoCodeController.get)
 
 module.exports = router
