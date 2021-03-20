@@ -10,4 +10,5 @@ module.exports = {
     sequelize: sequelize,
     clientModel: require("./clientModel.js")(sequelize),
     orderModel: require("./orderModel.js")(sequelize),
+    promoCode: require("./promoCodeModel.js")(sequelize),
 }
