@@ -3,7 +3,7 @@ const Sequelize = require("sequelize")
 class OrderModel{
     static model
 
-    static test(sequelize){
+    static connect(sequelize){
         this.model = sequelize.define("order",{
             id : {
                 type: Sequelize.INTEGER,
@@ -99,6 +99,6 @@ class OrderModel{
 
 
 module.exports = (sequelize)=>{
-    OrderModel.test(sequelize)
+    OrderModel.connect(sequelize)
     return OrderModel
 }

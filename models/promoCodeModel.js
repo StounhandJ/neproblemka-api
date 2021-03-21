@@ -3,7 +3,7 @@ const Sequelize = require("sequelize")
 class promoCode{
     static model
 
-    static test(sequelize){
+    static connect(sequelize){
         this.model = sequelize.define("promocodes",{
             id : {
                 type: Sequelize.INTEGER,
@@ -17,7 +17,8 @@ class promoCode{
             },
             code : {
                 type:Sequelize.CHAR(255),
-                allowNull: false
+                allowNull: false,
+                unique: true
             },
             discount : {
                 type:Sequelize.INTEGER,
@@ -73,10 +74,14 @@ class promoCode{
         })
     }
 
-
-    static async get_promoCodes()
+    static async get_promoCodes(typeOfCode=null, limitUsing=null)
     {
-        return await this.model.findAll()
+        let data = {}
+        if (typeOfCode!==undefined && typeOfCode!==null) data["typeOfCode"] = typeOfCode
+        if (limitUsing!==undefined && limitUsing!==null) data["limitUsing"] = limitUsing
+        return await this.model.findAll({
+            where: data
+        })
     }
 
     static async update_promoCode(id, name, code, discount, typeOfCode, limitUsing)
@@ -106,6 +111,6 @@ class promoCode{
 
 
 module.exports = (sequelize)=>{
-    promoCode.test(sequelize)
+    promoCode.connect(sequelize)
     return promoCode
 }
