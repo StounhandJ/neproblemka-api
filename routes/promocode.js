@@ -9,4 +9,12 @@ router.get("/promocode",validate([
     query('codeName').isString().optional()
 ]), promoCodeController.get)
 
+router.get('/promocode.all', validate([
+    query('id').isInt().optional(), 
+    query('codeName').isString().optional(),
+    query('name').isString().optional(),
+    query('discount').isString().optional(),
+    query('limitUsing').isInt().optional()
+]), promoCodeController.getAll)
+
 module.exports = router

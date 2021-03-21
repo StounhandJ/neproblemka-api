@@ -18,10 +18,14 @@ async function get(req, res){
     }
     await renderingJson(res, JSON.stringify(promo) === JSON.stringify([])?404:200,promo)
 }
+async function getAll(req, res){
+    let promos = await promoCode.get_promoCodes(req.query.getAll)
+    await renderingJson(res, JSON.stringify(promos) === JSON.stringify([])?200:404, promos)
+}
 
 module.exports = {
     get: get,
-    // getAll: getAll,
+    getAll: getAll
     // create: create,
     // update: update,
     // del: del
