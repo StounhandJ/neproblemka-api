@@ -1,21 +1,5 @@
 const Sequelize = require("sequelize")
 
-class ClientClass {
-    id;
-    mail;
-    telegramID;
-    phoneNumber;
-    state;
-
-    constructor(id, mail, telegramID, phoneNumber, state) {
-        this.id = id
-        this.mail = mail
-        this.telegramID = telegramID
-        this.phoneNumber = phoneNumber
-        this.state = state
-    }
-}
-
 class ClientModel{
     static model
 
@@ -51,13 +35,13 @@ class ClientModel{
 
     static async create_client(mail, telegramID, phoneNumber)
     {
-        return await this.#create_class(await this.model.create({
+        return await this.model.create({
             mail: mail,
             telegramID: telegramID,
             phoneNumber: phoneNumber
         }).catch(() => {
-            return []
-        }))
+            return null
+        })
     }
 
     static async update_client(id, mail, telegramID, phoneNumber)
@@ -75,22 +59,28 @@ class ClientModel{
         }
     }
 
-    static async get_client(id)
+    static async get_client_id(id)
     {
-        return await this.#create_class(await this.model.findOne({
+        return await this.model.findOne({
             where:{
                 id: id
             }
-        }))
+        })
+    }
+
+    static async get_client_telegramID(telegramID)
+    {
+        return await this.model.findOne({
+            where:{
+                telegramID: telegramID
+            }
+        })
     }
 
     static async get_clients()
     {
-        let result = []
-        for (const val of Object.values(await this.model.findAll())) {
-            result.push(await this.#create_class(val));
-        }
-        return result;
+        let result = Object.values(await this.model.findAll())
+        return result.length<1?null:result;
     }
 
     static async delete_client(id)
@@ -100,18 +90,10 @@ class ClientModel{
             { where: { id: id } }
         )
     }
-
-    static async #create_class(data)
-    {
-        return data?new ClientClass(data.id, data.mail, data.telegramID, data.phoneNumber, data.state):null
-    }
 }
 
 
-module.exports = {
-    ClientModel: (sequelize)=>{
-        ClientModel.connect(sequelize)
-        return ClientModel
-    },
-    ClientClass: ClientClass
+module.exports = (sequelize)=> {
+    ClientModel.connect(sequelize)
+    return ClientModel
 }

@@ -1,4 +1,3 @@
-// import all from "./clientModel.js"
 const Sequelize = require("sequelize")
 const sequelize = new Sequelize("neproblemka","mysql","mysql",{
     dialect: "mysql",
@@ -8,8 +7,8 @@ const sequelize = new Sequelize("neproblemka","mysql","mysql",{
 
 module.exports = {
     sequelize: sequelize,
-    clientModel: require("./clientModel.js").ClientModel(sequelize),
-    orderModel: require("./orderModel.js").OrderModel(sequelize),
-    promoCodeModel: require("./promoCodeModel.js").promoCodeModel(sequelize),
-    typeOfWorkModel: require("./typeofwork.js").typeOfWorkModel(sequelize),
+    clientModel: require("./clientModel.js")(sequelize),
+    orderModel: require("./orderModel.js")(sequelize),
+    promoCodeModel: require("./promoCodeModel.js")(sequelize),
+    typeOfWorkModel: require("./typeofwork.js")(sequelize),
 }

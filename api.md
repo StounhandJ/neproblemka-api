@@ -23,8 +23,10 @@ GET /client
 ### Все доступные параметры
 Параметр | Тип | Описание | По умолчанию
 -- | -- | -- | --
-id* | int | ID клиента
+id | int | ID клиента
+telegramID | int | ID клиента
 
+*Минимум один параметр должен передаваться для получения*
 
 ### Примеры запросов
 ```js
@@ -37,8 +39,7 @@ id* | int | ID клиента
     "id": 5,
     "mail": "tset@gmail.com",
     "telegramID":524523,
-    "phoneNumber":890972341,
-    "state":0
+    "phoneNumber":890972341
 }
 ```
 ***
@@ -187,8 +188,7 @@ id* | int | ID заказа
     "description":"Что же за заказ",
     "document":523,
     "typeWork":"Проектирование",
-    "stateOfOrder":3,
-    "state":0
+    "stateOfOrder":3
 }
 ```
 ***

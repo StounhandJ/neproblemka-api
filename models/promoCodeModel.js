@@ -1,25 +1,5 @@
 const Sequelize = require("sequelize")
 
-class promoCodeClass{
-    id
-    name
-    code
-    discount
-    typeOfCode
-    limitUsing
-    state
-    constructor(id, name, code, discount,typeOfCode,limitUsing, state)
-    {
-        this.id = id
-        this.name = name
-        this.code = code
-        this.discount = discount
-        this.typeOfCode = typeOfCode
-        this.limitUsing = limitUsing
-        this.state = state
-    }
-}
-
 class promoCodeModel{
     static model
 
@@ -64,32 +44,34 @@ class promoCodeModel{
 
     static async create_promoCode(name, code, discount, typeOfCode, limitUsing)
     {
-        return await this.#create_class(await this.model.create({
+        return await this.model.create({
             name: name,
             code: code,
             discount: discount,
             typeOfCode: typeOfCode,
             limitUsing: limitUsing
-        }))
+        }).catch(() => {
+            return null
+        })
     }
 
     static async get_promoCode_id(id)
     {
-        return await this.#create_class(await this.model.findOne({
+        return await this.model.findOne({
             where:{
                 id: id
             }
-        }))
+        })
     }
 
 
     static async get_promoCode_code(code)
     {
-        return await this.#create_class(await this.model.findOne({
+        return await this.model.findOne({
             where:{
                 code: code
             }
-        }))
+        })
     }
 
     static async get_promoCodes(typeOfCode=null, limitUsing=null)
@@ -97,11 +79,8 @@ class promoCodeModel{
         let data = {}
         if (typeOfCode!==undefined && typeOfCode!==null) data["typeOfCode"] = typeOfCode
         if (limitUsing!==undefined && limitUsing!==null) data["limitUsing"] = limitUsing
-        let result = []
-        for (const val of Object.values(await this.model.findAll({where: data}))) {
-            result.push(await this.#create_class(val));
-        }
-        return result;
+        const result = Object.values(await this.model.findAll({where: data}))
+        return result.length<1?null:result;
     }
 
     static async update_promoCode(id, name, code, discount, typeOfCode, limitUsing)
@@ -127,18 +106,10 @@ class promoCodeModel{
             { where: { id: id } }
         )
     }
-
-    static async #create_class(data)
-    {
-        return data?new promoCodeClass(data.id, data.name, data.code, data.discount,data.typeOfCode,data.limitUsing, data.state):null
-    }
 }
 
 
-module.exports = {
-    promoCodeModel: (sequelize)=>{
+module.exports = (sequelize)=>{
         promoCodeModel.connect(sequelize)
         return promoCodeModel
-    },
-    OrderClass: promoCodeClass
-}
+    }
