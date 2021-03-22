@@ -1,5 +1,25 @@
 const Sequelize = require("sequelize")
 
+class OrderClass{
+    id
+    idClient
+    description
+    document
+    typeWorkID
+    stateOfOrder
+    state
+    constructor(id, idClient, description, document,typeWorkID,stateOfOrder, state)
+    {
+        this.id = id
+        this.idClient = idClient
+        this.description = description
+        this.document = document
+        this.typeWorkID = typeWorkID
+        this.stateOfOrder = stateOfOrder
+        this.state = state
+    }
+}
+
 class OrderModel{
     static model
 
@@ -44,24 +64,22 @@ class OrderModel{
 
     static async create_order(idClient, description, documentID, typeWorkID, stateOfOrder)
     {
-        return await this.model.create({
+        return await this.#create_class(await this.model.create({
             idClient: idClient,
             description: description,
             documentID: documentID,
             typeWorkID: typeWorkID,
             stateOfOrder: stateOfOrder
-        }).catch(() => {
-            return []
-        })
+        }))
     }
 
     static async get_order(id)
     {
-        return await this.model.findOne({
+        return await this.#create_class(await this.model.findOne({
             where:{
                 id: id
             }
-        })
+        }))
     }
 
     static async get_orders(idClient, typeWorkID, stateOfOrder)
@@ -70,9 +88,11 @@ class OrderModel{
         if (idClient!==undefined && idClient!==null) data["idClient"] = idClient
         if (typeWorkID!==undefined && typeWorkID!==null) data["typeWorkID"] = typeWorkID
         if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
-        return await this.model.findAll({
-            where: data
-        })
+        let result = []
+        for (const val of Object.values(await this.model.findAll({where: data}))) {
+            result.push(await this.#create_class(val));
+        }
+        return result;
     }
 
     static async update_order(id, stateOfOrder)
@@ -95,10 +115,17 @@ class OrderModel{
             { where: { id: id } }
         )
     }
+
+    static async #create_class(data)
+    {
+        return data?new OrderClass(data.id, data.idClient, data.description, data.document,data.typeWorkID,data.stateOfOrder, data.state):null
+    }
 }
 
-
-module.exports = (sequelize)=>{
-    OrderModel.connect(sequelize)
-    return OrderModel
+module.exports = {
+    OrderModel: (sequelize)=>{
+        OrderModel.connect(sequelize)
+        return OrderModel
+    },
+    OrderClass: OrderClass
 }

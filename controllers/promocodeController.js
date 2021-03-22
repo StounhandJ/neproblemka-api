@@ -1,4 +1,4 @@
-const promoCode = require('../models/index.js').promoCode
+const promoCode = require('../models/index.js').promoCodeModel
 const renderingJson = require('../lib/View').renderingJson
 
 
@@ -18,10 +18,12 @@ async function get(req, res){
     }
     await renderingJson(res, JSON.stringify(promo) === JSON.stringify([])?404:200,promo)
 }
+
 async function getAll(req, res){
     let promos = await promoCode.get_promoCodes(req.query.getAll)
     await renderingJson(res, JSON.stringify(promos) === JSON.stringify([])?200:404, promos)
 }
+
 async function create(req, res){
     let promos = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
     await renderingJson(res, JSON.stringify(promos) === JSON.stringify([])?400:200,promos)

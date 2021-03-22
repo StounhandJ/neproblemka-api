@@ -186,7 +186,7 @@ id* | int | ID заказа
     "idClient": 45,
     "description":"Что же за заказ",
     "document":523,
-    "typeWorkID":2,
+    "typeWork":"Проектирование",
     "stateOfOrder":3,
     "state":0
 }
