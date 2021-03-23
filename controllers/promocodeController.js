@@ -1,37 +1,46 @@
 const promoCode = require('../models/index.js').promoCode
 const renderingJson = require('../lib/View').renderingJson
 
-
-async function get(req, res){
-   let promo
+async function makingResponse(data) {
+    return {
+        id: data.id,
+        name: data.name,
+        codeName: data.codeName,
+        discount: data.discount,
+        typeOfCode: data.typeOfCode,
+        limitUsing: data.limitUsing,
+        typeWork: (await typeOfWorkModel.get_typeOfWorkModel_id(data.typeWorkID)).type,
+    }
+}
+async function get(req, res) {
+    let promo
     if (req.query.id !== undefined) {
         promo = await promoCode.get_promoCode_id(req.query.id)
 
-    } 
-    else if(req.query.codeName !== undefined)
-    {
+    }
+    else if (req.query.codeName !== undefined) {
         promo = await promoCode.get_promoCode_code(req.query.codeName)
     }
-    else{
+    else {
         await renderingJson(res, 400)
         return
     }
-    await renderingJson(res, JSON.stringify(promo) === JSON.stringify([])?404:200,promo)
+    await renderingJson(res, promo ? 404 : 200, promo? await makingResponse(promo):[])
 }
-async function getAll(req, res){
+async function getAll(req, res) {
     const promos = await promoCode.get_promoCodes(req.query.getAll)
-    await renderingJson(res, JSON.stringify(promos) === JSON.stringify([])?404:200, promos)
+    await renderingJson(res, JSON.stringify(promos) === null ? 404 : 200, promos)
 }
-async function create(req, res){
+async function create(req, res) {
     const promos = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
-    await renderingJson(res, JSON.stringify(promos) === JSON.stringify([])?400:200,promos)
+    await renderingJson(res, JSON.stringify(promos) === null ? 400 : 200, promos)
 }
 
-async function update(req, res){
+async function update(req, res) {
     await renderingJson(res, 200, await promoCode.update_promoCode(req.query.id, req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing))
 }
 
-async function del(req, res){
+async function del(req, res) {
     await renderingJson(res, 200, await promoCode.delete_promoCode(req.query.id))
 }
 
