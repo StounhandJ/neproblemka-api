@@ -29,9 +29,9 @@ CREATE TABLE `clients` (
 
 CREATE TABLE `documents` (
   `id` int NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `pathDisk` varchar(255) NOT NULL,
-  `documentTelegramId` varchar(255) NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `pathDisk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `documentTelegramId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -49,8 +49,8 @@ CREATE TABLE `paymentorder` (
   `id` int NOT NULL,
   `idOrder` int NOT NULL,
   `price` int NOT NULL,
-  `dateEnd` int NOT NULL,
-  `promoCodeID` int NOT NULL,
+  `dateEnd` int DEFAULT NULL,
+  `promoCodeID` int DEFAULT NULL,
   `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
