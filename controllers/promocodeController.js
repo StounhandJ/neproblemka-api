@@ -5,10 +5,12 @@ async function makingResponse(data) {
     return {
         id: data.id,
         name: data.name,
+        code: data.code,
         codeName: data.codeName,
         discount: data.discount,
         typeOfCode: data.typeOfCode,
-        limitUsing: data.limitUsing
+        limitUsing: data.limitUsing,
+        state: data.state
     }
 }
 async function get(req, res) {
@@ -24,31 +26,27 @@ async function get(req, res) {
         await renderingJson(res, 400)
         return
     }
-    await renderingJson(res, promo ? 404 : 200, promo? await makingResponse(promo):[])
-}
-
-async function getAll(req, res) {
-    const promos = await promoCode.get_promoCodes(req.query.getAll)
-    await renderingJson(res, promos ? 404 : 200, promo? await makingResponse(promos):[])
-}
-async function create(req, res) {
-
-    const promo = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
-    await renderingJson(res, promo ? 400 : 200, promo? await makingResponse(promo):[])
-
-    const promos = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
-    await renderingJson(res, JSON.stringify(promos) === null ? 400 : 200, promos)
-}
-
-
-async function getAll(req, res){
-    let promos = await promoCode.get_promoCodes(req.query.getAll)
     await renderingJson(res, promo ? 200 : 404, promo? await makingResponse(promo):[])
 }
 
+async function getAll(req, res) {
+    const promos = await promoCode.get_promoCodes(req.query.typeOfCode, req.query.limitUsing)
+    let result = []
+    if (promos) {
+        for (const val of promos) {
+            result.push(await makingResponse(val))
+        }
+    }
+    await renderingJson(res, promos ? 200 : 400, result) 
+}
+async function create(req, res) {
+    let promo = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
+   await renderingJson(res, promo ? 400 : 200, promo? await makingResponse(promo):[])
+}
+
 async function create(req, res){
-    let promos = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
-    await renderingJson(res, promo ? 404 : 200, promo? await makingResponse(promo):[])
+    let promo = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
+    await renderingJson(res, promo ? 200 : 400, promo? await makingResponse(promo):[])
 }
 
 async function update(req, res) {
@@ -58,7 +56,7 @@ async function update(req, res) {
 async function del(req, res) {
     await renderingJson(res, 200, await promoCode.delete_promoCode(req.query.id))
 }
-}
+
 module.exports = {
     get: get,
     getAll: getAll,
