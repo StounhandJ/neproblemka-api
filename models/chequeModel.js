@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize")
 
-class pchequeModel{
+class chequeModel{
     static model
 
     static connect(sequelize){
@@ -69,9 +69,12 @@ class pchequeModel{
         })
     }
 
-    static async get_cheques()
+    static async get_cheques(id, active)
     {
-        const result = Object.values(await this.model.findAll({where: {state:0}}))
+        let data = {}
+        if (id!==undefined && id!==null) data["id"] = id
+        if (active!==undefined && active!==null) data["active"] = active
+        const result = Object.values(await this.model.findAll({where: {state:0,...data}}))
         return result.length<1?null:result;
     }
 
@@ -86,6 +89,6 @@ class pchequeModel{
 
 
 module.exports = (sequelize)=>{
-    promoCodeModel.connect(sequelize)
-    return promoCodeModel
+    chequeModel.connect(sequelize)
+    return chequeModel
 }

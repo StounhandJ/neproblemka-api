@@ -4,7 +4,7 @@ const renderingJson = require('../lib/View').renderingJson
 async function makingResponse(data){
     return {
         id: data.id,
-        idOrder : data.idOrder ,
+        idOrder : data.idOrder,
         price: data.price,
         dateEnd: data.dateEnd??null,
         promoCodeID : data.promoCodeID??null
@@ -34,9 +34,6 @@ async function create(req, res){
     await renderingJson(res, paymentOrder?200:400,paymentOrder?await makingResponse(paymentOrder):[])
 }
 
-// async function update(req, res){
-//     await renderingJson(res, 200, await makingResponse(await orderModel.update_order(req.query.id, req.query.stateOfOrder)))
-// }
 
 async function del(req, res){
     await renderingJson(res, 200, await paymentOrderModel.delete_paymentOrder(req.query.id))

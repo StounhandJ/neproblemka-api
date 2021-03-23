@@ -12,5 +12,6 @@ module.exports = {
     promoCodeModel: require("./promoCodeModel.js")(sequelize),
     typeOfWorkModel: require("./typeOfWorkModel.js")(sequelize),
     PaymentOrderModel: require("./paymentOrderModel.js")(sequelize),
-    DocumentModel: require("./documentModel.js")(sequelize)
+    DocumentModel: require("./documentModel.js")(sequelize),
+    chequeModel: require("./chequeModel.js")(sequelize)
 }
