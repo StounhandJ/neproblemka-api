@@ -6,7 +6,8 @@ const { query } = require('express-validator')
 
 
 router.get('/client', validate([
-    query('id').isInt()
+        query('id').isInt().optional(),
+        query('telegramID').isInt().optional()
 ]),
     clientController.get)
 
@@ -33,9 +34,5 @@ router.post('/client.del', validate([
         query('id').isInt()
     ]),
     clientController.del)
-
-// router.post('/api/server', create)
-//
-// router.delete('/api/server/:id', remove)
 
 module.exports = router

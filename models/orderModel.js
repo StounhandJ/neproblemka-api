@@ -3,7 +3,7 @@ const Sequelize = require("sequelize")
 class OrderModel{
     static model
 
-    static test(sequelize){
+    static connect(sequelize){
         this.model = sequelize.define("order",{
             id : {
                 type: Sequelize.INTEGER,
@@ -51,14 +51,14 @@ class OrderModel{
             typeWorkID: typeWorkID,
             stateOfOrder: stateOfOrder
         }).catch(() => {
-            return []
+            return null
         })
     }
 
     static async get_order(id)
     {
         return await this.model.findOne({
-            where:{
+            where: {
                 id: id
             }
         })
@@ -70,9 +70,8 @@ class OrderModel{
         if (idClient!==undefined && idClient!==null) data["idClient"] = idClient
         if (typeWorkID!==undefined && typeWorkID!==null) data["typeWorkID"] = typeWorkID
         if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
-        return await this.model.findAll({
-            where: data
-        })
+        const result = Object.values(await this.model.findAll({where: data}))
+        return result.length<1?null:result;
     }
 
     static async update_order(id, stateOfOrder)
@@ -97,8 +96,7 @@ class OrderModel{
     }
 }
 
-
 module.exports = (sequelize)=>{
-    OrderModel.test(sequelize)
+    OrderModel.connect(sequelize)
     return OrderModel
 }

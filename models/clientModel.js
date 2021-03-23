@@ -40,7 +40,7 @@ class ClientModel{
             telegramID: telegramID,
             phoneNumber: phoneNumber
         }).catch(() => {
-            return []
+            return null
         })
     }
 
@@ -59,7 +59,7 @@ class ClientModel{
         }
     }
 
-    static async get_client(id)
+    static async get_client_id(id)
     {
         return await this.model.findOne({
             where:{
@@ -68,9 +68,19 @@ class ClientModel{
         })
     }
 
+    static async get_client_telegramID(telegramID)
+    {
+        return await this.model.findOne({
+            where:{
+                telegramID: telegramID
+            }
+        })
+    }
+
     static async get_clients()
     {
-        return await this.model.findAll()
+        let result = Object.values(await this.model.findAll())
+        return result.length<1?null:result;
     }
 
     static async delete_client(id)
@@ -83,7 +93,7 @@ class ClientModel{
 }
 
 
-module.exports = (sequelize)=>{
+module.exports = (sequelize)=> {
     ClientModel.connect(sequelize)
     return ClientModel
 }

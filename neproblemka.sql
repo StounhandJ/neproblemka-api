@@ -1,3 +1,5 @@
+CREATE DATABASE neproblemka;
+USE neproblemka;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -97,6 +99,7 @@ ALTER TABLE `paymentorder`
 
 ALTER TABLE `promocodes`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
   ADD KEY `id` (`id`);
 
 ALTER TABLE `typeofwork`

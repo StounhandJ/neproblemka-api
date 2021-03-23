@@ -1,4 +1,4 @@
-const promoCode = require('../models/index.js').promoCode
+const promoCode = require('../models/index.js').promoCodeModel
 const renderingJson = require('../lib/View').renderingJson
 
 async function makingResponse(data) {
@@ -27,6 +27,7 @@ async function get(req, res) {
     }
     await renderingJson(res, promo ? 404 : 200, promo? await makingResponse(promo):[])
 }
+
 async function getAll(req, res) {
     const promos = await promoCode.get_promoCodes(req.query.getAll)
     await renderingJson(res, JSON.stringify(promos) === null ? 404 : 200, promos)
@@ -34,6 +35,15 @@ async function getAll(req, res) {
 async function create(req, res) {
     const promos = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
     await renderingJson(res, JSON.stringify(promos) === null ? 400 : 200, promos)
+
+async function getAll(req, res){
+    let promos = await promoCode.get_promoCodes(req.query.getAll)
+    await renderingJson(res, JSON.stringify(promos) === JSON.stringify([])?200:404, promos)
+}
+
+async function create(req, res){
+    let promos = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
+    await renderingJson(res, JSON.stringify(promos) === JSON.stringify([])?400:200,promos)
 }
 
 async function update(req, res) {
