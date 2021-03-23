@@ -59,7 +59,8 @@ class OrderModel{
     {
         return await this.model.findOne({
             where: {
-                id: id
+                id: id,
+                state: 0
             }
         })
     }
@@ -70,7 +71,7 @@ class OrderModel{
         if (idClient!==undefined && idClient!==null) data["idClient"] = idClient
         if (typeWorkID!==undefined && typeWorkID!==null) data["typeWorkID"] = typeWorkID
         if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
-        const result = Object.values(await this.model.findAll({where: data}))
+        const result = Object.values(await this.model.findAll({where: {state:0,...data}, }))
         return result.length<1?null:result;
     }
 

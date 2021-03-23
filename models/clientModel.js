@@ -63,7 +63,8 @@ class ClientModel{
     {
         return await this.model.findOne({
             where:{
-                id: id
+                id: id,
+                state:0
             }
         })
     }
@@ -72,14 +73,15 @@ class ClientModel{
     {
         return await this.model.findOne({
             where:{
-                telegramID: telegramID
+                telegramID: telegramID,
+                state:0
             }
         })
     }
 
     static async get_clients()
     {
-        let result = Object.values(await this.model.findAll())
+        let result = Object.values(await this.model.findAll({where:{state:0}}))
         return result.length<1?null:result;
     }
 
@@ -87,7 +89,7 @@ class ClientModel{
     {
         await this.model.update(
             { state: 1 },
-            { where: { id: id } }
+            { where: { id: id, state:0 } }
         )
     }
 }
