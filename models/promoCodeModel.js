@@ -79,7 +79,7 @@ class promoCodeModel{
         let data = {}
         if (typeOfCode!==undefined && typeOfCode!==null) data["typeOfCode"] = typeOfCode
         if (limitUsing!==undefined && limitUsing!==null) data["limitUsing"] = limitUsing
-        const result = Object.values(await this.model.findAll({where: data}))
+        const result = Object.values(await this.model.findAll({where: {state:0,...data}}))
         return result.length<1?null:result;
     }
 

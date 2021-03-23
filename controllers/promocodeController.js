@@ -8,8 +8,7 @@ async function makingResponse(data) {
         codeName: data.codeName,
         discount: data.discount,
         typeOfCode: data.typeOfCode,
-        limitUsing: data.limitUsing,
-        typeWork: (await typeOfWorkModel.get_typeOfWorkModel_id(data.typeWorkID)).type,
+        limitUsing: data.limitUsing
     }
 }
 async function get(req, res) {
@@ -35,6 +34,7 @@ async function getAll(req, res) {
 async function create(req, res) {
     const promos = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
     await renderingJson(res, JSON.stringify(promos) === null ? 400 : 200, promos)
+}
 
 async function getAll(req, res){
     let promos = await promoCode.get_promoCodes(req.query.getAll)

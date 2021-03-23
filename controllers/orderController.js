@@ -3,12 +3,13 @@ const typeOfWorkModel = require('../models/index.js').typeOfWorkModel
 const renderingJson = require('../lib/View').renderingJson
 
 async function makingResponse(data){
+    const typeWork = await typeOfWorkModel.get_typeOfWork_id(data.typeWorkID)
     return {
         id: data.id,
         idClient: data.idClient,
         description: data.description,
-        document: data.document,
-        typeWork:(await typeOfWorkModel.get_typeOfWork_id(data.typeWorkID)).type,
+        document: data.document??null,
+        typeWork:typeWork?typeWork.type:null,
         stateOfOrder: data.stateOfOrder
     }
 }

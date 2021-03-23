@@ -37,7 +37,8 @@ class typeOfWorkModel{
     {
         return await this.model.findOne({
             where:{
-                id: id
+                id: id,
+                state:0
             }
         })
     }
@@ -47,7 +48,8 @@ class typeOfWorkModel{
     {
         return await this.model.findOne({
             where:{
-                type: type
+                type: type,
+                state:0
             }
         })
     }
