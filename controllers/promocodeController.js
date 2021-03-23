@@ -37,7 +37,7 @@ async function getAll(req, res) {
             result.push(await makingResponse(val))
         }
     }
-    await renderingJson(res, promos ? 200 : 400, result) 
+    await renderingJson(res, promos ? 200 : 404, result) 
 }
 async function create(req, res) {
     let promo = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
