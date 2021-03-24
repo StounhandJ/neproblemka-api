@@ -7,6 +7,7 @@ const clientRoutes = require('./routes/client.js')
 const promoCodesRoutes = require('./routes/promocode.js')
 const paymentOrderRoutes = require('./routes/paymentOrder.js')
 const chequeRoutes = require('./routes/cheque.js')
+const test = require("./controllers/documentController")
 
 // const __dirname = path.resolve()
 const PORT = process.env.PORT ?? 3000
@@ -20,7 +21,8 @@ app.use(clientRoutes)
 app.use(promoCodesRoutes)
 app.use(paymentOrderRoutes)
 app.use(chequeRoutes)
-console.log()
+
+app.use(express.static(__dirname + '/public'),test.download)
 app.listen(PORT, () => {
     console.log(`Server has been started on port ${PORT}...`)
 })
