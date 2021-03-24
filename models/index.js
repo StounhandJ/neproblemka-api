@@ -1,7 +1,8 @@
 const Sequelize = require("sequelize")
-const sequelize = new Sequelize("neproblemka","mysql","mysql",{
+const {DB_login, DB_password, DB_name, DB_host} = require("../config.js")
+const sequelize = new Sequelize(DB_name,DB_login,DB_password,{
     dialect: "mysql",
-    host: "localhost",
+    host: DB_host,
     operatorsAliases: false
 })
 

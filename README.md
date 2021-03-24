@@ -14,4 +14,4 @@
 
 ## Дополнительные файлы
 
-1. Документация к API [api.md](https://github.com/StounhandJ/neproblemka-api/blob/master/document/api.md)
+1. Документация к API [api.md](https://github.com/StounhandJ/neproblemka-api/blob/master/documentation/api.md)

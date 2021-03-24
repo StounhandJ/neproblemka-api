@@ -5,5 +5,12 @@ mesStatusCode ={
 }
 
 module.exports ={
-    mesStatusCode: mesStatusCode
+    mesStatusCode: mesStatusCode,
+
+    DB_login:"mysql",
+    DB_password:"mysql",
+    DB_name:"neproblemka",
+    DB_host:"localhost",
+
+    directory_store: "public",
 }

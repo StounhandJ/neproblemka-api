@@ -1,25 +1,16 @@
 const mainDir = __dirname+"/../"
 const fs = require("fs")
-const renderingJson = require('../lib/View').renderingJson
+const renderingError404 = require('../lib/View').renderingError404
+const {directory_store} = require("../config.js")
 
-
-async function download(req, res){
-    console.log(req.urlencoded)
-    let path = ""
-    let mas = req.url.split('/')
-    delete mas[0]
-    delete mas[1]
-    mas.forEach((val)=>{
-        path+=val!==""?val+"/":""
-    })
-    path = path.substring(0, path.length - 1)
-    console.log(mainDir + '/public/'+path)
-    fs.stat(mainDir + '/public/'+path, async function(err) {
+async function download(req, res, next){
+    req.url = req.url.substring(req.url.indexOf("/",1),req.url.length)
+    fs.stat(`${mainDir}/${directory_store}/${req.url}`, async function(err) {
         if (err==null) {
-            res.download(mainDir + '/public/'+path)
+            res.download(`${mainDir}/${directory_store}/${req.url}`)
         }
         else {
-            await renderingJson(res, 404)
+            await renderingError404(null,res,null, "document not found")
         }
     })
 }

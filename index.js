@@ -7,7 +7,8 @@ const clientRoutes = require('./routes/client.js')
 const promoCodesRoutes = require('./routes/promocode.js')
 const paymentOrderRoutes = require('./routes/paymentOrder.js')
 const chequeRoutes = require('./routes/cheque.js')
-const test = require("./controllers/documentController")
+const documentController = require("./controllers/documentController.js")
+const renderingError404 = require("./lib/View.js").renderingError404
 
 // const __dirname = path.resolve()
 const PORT = process.env.PORT ?? 3000
@@ -22,7 +23,9 @@ app.use(promoCodesRoutes)
 app.use(paymentOrderRoutes)
 app.use(chequeRoutes)
 
-app.use(express.static(__dirname + '/public'),test.download)
+app.get("/download/*",documentController.download)
+app.use(renderingError404)
+
 app.listen(PORT, () => {
     console.log(`Server has been started on port ${PORT}...`)
 })

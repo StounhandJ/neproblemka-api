@@ -4,19 +4,20 @@ const renderingJson = require('../lib/View').renderingJson
 const multer  = require('multer')
 const documentModel = require("../models/index.js").documentModel
 const mkdir = require('mkdirp')
-const mainDir = __dirname+"/../"
+const mainDir = __dirname+"/.."
+const {directory_store} = require("../config.js")
 
 
 diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log(mainDir+"public/orderDocument")
-        cb(null, mainDir+"public/orderDocument")
+        console.log(`${mainDir}/${directory_store}/orderDocument`)
+        cb(null, `${mainDir}/${directory_store}/orderDocument`)
     },
     filename: async function (req, file, cb) {
-        mkdir(mainDir+"public/orderDocument/"+req.query.idClient)
-        const doc = await documentModel.create_document("orderDocument/"+req.query.idClient+"/"+file.originalname,null,req.query.docTelegID)
+        mkdir(`${mainDir}/${directory_store}/orderDocument/${req.query.idClient}`)
+        const doc = await documentModel.create_document(`orderDocument/${req.query.idClient}/${file.originalname}`,null,req.query.docTelegID)
         req.query.documentID = doc?doc.id:null
-        cb(null, req.query.idClient+"/"+file.originalname)
+        cb(null, `${req.query.idClient}/${file.originalname}`)
     }
 })
 
