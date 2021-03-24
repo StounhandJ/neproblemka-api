@@ -49,7 +49,8 @@ class DocumentModel{
             where: {
                 id: id,
                 state: 0
-            }
+            },
+            attributes:{exclude:["state"]}
         })
     }
 

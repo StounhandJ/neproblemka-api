@@ -28,7 +28,11 @@ id* | int | ID заказа
     "id": 1,
     "idClient": 45,
     "description":"Что же за заказ",
-    "document":523,
+    "document":{
+        "path":"orderDocument/2146/file.txt",
+        "pathDisk":null,
+        "documentTelegramId":"dsgb23blbsfv3bgsdg43gssvu"
+        },
     "typeWork":"Проектирование",
     "stateOfOrder":3
 }
@@ -78,11 +82,12 @@ POST /order.create
 -- | -- | -- | --
 idClient* | int | ID клиента
 description* | string | Описание заказа
-documentID | int | ID документа | null
 typeWorkID* | int | ID типа работы
 stateOfOrder* | int | ID состояния
+docTelegID | string | ID документа в телеграме | null
+document | document | Документ | null
 
-*Все параметры обязательны, кроме documentID*
+*document отправлять как файл*
 
 ### Примеры запросов
 ```js

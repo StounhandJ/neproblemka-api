@@ -1,14 +1,32 @@
 const orderModel = require('../models/index.js').orderModel
 const typeOfWorkModel = require('../models/index.js').typeOfWorkModel
 const renderingJson = require('../lib/View').renderingJson
+const multer  = require('multer')
+const documentModel = require("../models/index.js").documentModel
+const mkdir = require('mkdirp')
+const mainDir = require("path").join(__dirname, "../")
+
+
+diskStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, mainDir+"data/orderDocument")
+    },
+    filename: async function (req, file, cb) {
+        mkdir(mainDir+"data/orderDocument/"+req.query.idClient)
+        const doc = await documentModel.create_document("data/orderDocument/"+req.query.idClient+"/"+file.originalname,null,req.query.docTelegID)
+        req.query.documentID = doc?doc.id:null
+        cb(null, req.query.idClient+"/"+file.originalname)
+    }
+})
 
 async function makingResponse(data){
     const typeWork = await typeOfWorkModel.get_typeOfWork_id(data.typeWorkID)
+    const document = await documentModel.get_document(data.documentID)
     return {
         id: data.id,
         idClient: data.idClient,
         description: data.description,
-        document: data.document??null,
+        document: document??null,
         typeWork:typeWork?typeWork.type:null,
         stateOfOrder: data.stateOfOrder
     }
@@ -50,5 +68,7 @@ module.exports = {
     getAll: getAll,
     create: create,
     update: update,
-    del: del
+    del: del,
+
+    diskStorage: diskStorage
 }

@@ -3,6 +3,8 @@ const orderController = require('../controllers/orderController.js')
 const validate = require("../lib/Validation")
 const { query } = require('express-validator')
 const router = Router()
+const multer  = require('multer')
+let upload = multer({ storage:orderController.diskStorage })
 
 router.get('/order', validate([
     query('id').isInt()
@@ -18,10 +20,10 @@ router.get('/order.all', validate([
 router.post('/order.create', validate([
     query('idClient').isInt(),
     query('description').isString(),
-    query('documentID').isInt().optional(),
     query('typeWorkID').isInt(),
-    query('stateOfOrder').isInt()
-]), orderController.create)
+    query('stateOfOrder').isInt(),
+    query('docTelegID').isString().optional(),
+]), upload.any(), orderController.create)
 
 
 router.post('/order.update', validate([
@@ -32,4 +34,5 @@ router.post('/order.update', validate([
 router.post('/order.del', validate([
     query('id').isInt()
 ]), orderController.del)
+
 module.exports = router
