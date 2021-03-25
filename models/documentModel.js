@@ -60,18 +60,18 @@ class DocumentModel{
         return result.length<1?null:result;
     }
 
-    // static async update_paymentOrder(id, stateOfOrder)
-    // {
-    //     let data = {}
-    //     if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
-    //
-    //     if (data!=={}){
-    //         await this.model.update(
-    //             data,
-    //             { where: { id: id } }
-    //         )
-    //     }
-    // }
+    static async update_document(id, documentTelegramId)
+    {
+        let data = {}
+        if (documentTelegramId!==undefined && documentTelegramId!==null) data["documentTelegramId"] = documentTelegramId
+
+        if (data!=={}){
+            await this.model.update(
+                data,
+                { where: { id: id } }
+            )
+        }
+    }
 
     static async delete_document(id)
     {

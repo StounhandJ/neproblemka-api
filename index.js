@@ -7,7 +7,7 @@ const clientRoutes = require('./routes/client.js')
 const promoCodesRoutes = require('./routes/promocode.js')
 const paymentOrderRoutes = require('./routes/paymentOrder.js')
 const chequeRoutes = require('./routes/cheque.js')
-const documentController = require("./controllers/documentController.js")
+const documentRoutes = require('./routes/document.js')
 const renderingError404 = require("./lib/View.js").renderingError404
 
 // const __dirname = path.resolve()
@@ -22,8 +22,8 @@ app.use(clientRoutes)
 app.use(promoCodesRoutes)
 app.use(paymentOrderRoutes)
 app.use(chequeRoutes)
+app.use(documentRoutes)
 
-app.get("/download/*",documentController.download)
 app.use(renderingError404)
 
 app.listen(PORT, () => {
