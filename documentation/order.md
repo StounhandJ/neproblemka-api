@@ -82,7 +82,7 @@ POST /order.create
 -- | -- | -- | --
 idClient* | int | ID клиента
 description* | string | Описание заказа
-typeWorkID* | int | ID типа работы
+typeWork* | str | Имя типа работы
 stateOfOrder* | int | ID состояния
 docTelegID | string | ID документа в телеграме | null
 document | document | Документ | null

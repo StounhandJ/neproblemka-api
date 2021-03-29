@@ -1,8 +1,8 @@
 const orderModel = require('../models/index.js').orderModel
 const typeOfWorkModel = require('../models/index.js').typeOfWorkModel
+const documentModel = require("../models/index.js").documentModel
 const renderingJson = require('../lib/View').renderingJson
 const multer  = require('multer')
-const documentModel = require("../models/index.js").documentModel
 const mkdir = require('mkdirp')
 const mainDir = __dirname+"/.."
 const {directory_store} = require("../config.js")
@@ -53,7 +53,8 @@ async function getAll(req, res){
 
 
 async function create(req, res){
-    const order = await orderModel.create_order(req.query.idClient, req.query.description, req.query.documentID, req.query.typeWorkID, req.query.stateOfOrder)
+    const typeOfWork = await typeOfWorkModel.get_typeOfWork_type(req.query.typeWork)?? await typeOfWorkModel.create_typeOfWork(req.query.typeWork)
+    const order = await orderModel.create_order(req.query.idClient, req.query.description, req.query.documentID, typeOfWork.id, req.query.stateOfOrder)
     await renderingJson(res, order?200:400,order?await makingResponse(order):[])
 }
 

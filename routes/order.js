@@ -20,7 +20,7 @@ router.get('/order.all', validate([
 router.post('/order.create', validate([
     query('idClient').isInt(),
     query('description').isString(),
-    query('typeWorkID').isInt(),
+    query('typeWork').isString(),
     query('stateOfOrder').isInt(),
     query('docTelegID').isString().optional(),
 ]), upload.any(), orderController.create)

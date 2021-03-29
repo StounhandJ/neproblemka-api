@@ -47,7 +47,7 @@ class DocumentModel{
     {
         return await this.model.findOne({
             where: {
-                id: id,
+                id: id??null,
                 state: 0
             },
             attributes:{exclude:["state"]}
