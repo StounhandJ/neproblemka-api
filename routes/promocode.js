@@ -14,10 +14,12 @@ router.get('/promocode.all', validate([
     query('codeName').isString().optional(),
     query('name').isString().optional(),
     query('discount').isInt().optional(),
-    query('limitUsing').isInt().optional()
+    query('limitUsing').isInt().optional(),
+    query('offset').isInt().optional(),
+    query('limit').isInt().optional()
 ]), promoCodeController.getAll)
 
-router.get('/promocode.create', validate([
+router.post('/promocode.create', validate([
     query('name').isString(),
     query('codeName').isString(),
     query('discount').isInt(),
@@ -25,7 +27,7 @@ router.get('/promocode.create', validate([
     query('limitUsing').isInt()   
 ]), promoCodeController.create)
 
-router.get('/promocode.update', validate([
+router.post('/promocode.update', validate([
     query('id').isInt(),
     query('name').isString().optional(),
     query('codeName').isString().optional(),
@@ -35,7 +37,7 @@ router.get('/promocode.update', validate([
 
 ]), promoCodeController.update)
 
-router.get('/promocode.del',  validate([
+router.post('/promocode.del',  validate([
     query('id').isInt()
 ]), promoCodeController.del)
 

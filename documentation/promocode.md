@@ -30,10 +30,11 @@ codeName | str | Промокод
 {
     "id": 3,
     "name": "Лучший промокод",
-    "codeName":"bigDiscount",
+    "code":"bigDiscount",
     "discount":35,
     "typeOfCode":1,
-    "limitUsing":15
+    "limitUsing":15,
+    "info":35%
 }
 ```
 ***
@@ -49,12 +50,16 @@ GET /promocode.all
 ### Все доступные параметры
 Параметр | Тип | Описание | По умолчанию
 -- | -- | -- | --
+typeOfCode | int[0,1] | Тип промокода
+limitUsing | int | Количество использований
+offset | int | Смещение возврата 
+limit | int | Сколько вернуть
 
 *В разработке*
 
 ### Примеры запросов
 ```js
-/promocode.all
+/promocode.all?typeOfCode=1&limit=10
 ```
 
 ### Пример ответа

@@ -74,12 +74,16 @@ class promoCodeModel{
         })
     }
 
-    static async get_promoCodes(typeOfCode=null, limitUsing=null)
+    static async get_promoCodes(typeOfCode=null, limitUsing=null, offset, limit)
     {
-        let data = {}
+        let data = {state:0}
+        let options = {}
         if (typeOfCode!==undefined && typeOfCode!==null) data["typeOfCode"] = typeOfCode
         if (limitUsing!==undefined && limitUsing!==null) data["limitUsing"] = limitUsing
-        const result = Object.values(await this.model.findAll({where: {state:0,...data}}))
+        if (offset!==undefined && offset!==null) options["offset"] = Number.parseInt(offset)
+        if (limit!==undefined && limit!==null) options["limit"] = Number.parseInt(limit)
+        options["where"] = data
+        const result = Object.values(await this.model.findAll(options))
         return result.length<1?null:result;
     }
 

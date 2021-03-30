@@ -6,11 +6,10 @@ async function makingResponse(data) {
         id: data.id,
         name: data.name,
         code: data.code,
-        codeName: data.codeName,
         discount: data.discount,
         typeOfCode: data.typeOfCode,
         limitUsing: data.limitUsing,
-        state: data.state
+        info: data.discount+(data.typeOfCode?"%":"р.")
     }
 }
 async function get(req, res) {
@@ -30,7 +29,7 @@ async function get(req, res) {
 }
 
 async function getAll(req, res) {
-    const promos = await promoCode.get_promoCodes(req.query.typeOfCode, req.query.limitUsing)
+    const promos = await promoCode.get_promoCodes(req.query.typeOfCode, req.query.limitUsing,req.query.offset,req.query.limit)
     let result = []
     if (promos) {
         for (const val of promos) {
@@ -38,10 +37,6 @@ async function getAll(req, res) {
         }
     }
     await renderingJson(res, promos ? 200 : 404, result) 
-}
-async function create(req, res) {
-    let promo = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
-   await renderingJson(res, promo ? 400 : 200, promo? await makingResponse(promo):[])
 }
 
 async function create(req, res){
