@@ -38,7 +38,8 @@ async function create(req, res){
 }
 
 async function update(req, res){
-    await renderingJson(res, 200, await makingResponse(await clientModel.update_client(req.query.id, req.query.mail, req.query.telegramID, req.query.phoneNumber)))
+    await clientModel.update_client(req.query.id, req.query.mail, req.query.telegramID, req.query.phoneNumber)
+    await renderingJson(res, 200)
 }
 
 async function del(req, res){

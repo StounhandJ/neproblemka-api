@@ -1,4 +1,4 @@
-const paymentOrderModel = require('../models/index.js').PaymentOrderModel
+const paymentOrderModel = require('../models/index.js').paymentOrderModel
 const renderingJson = require('../lib/View').renderingJson
 
 async function makingResponse(data){
@@ -7,7 +7,8 @@ async function makingResponse(data){
         idOrder : data.idOrder,
         price: data.price,
         dateEnd: data.dateEnd??null,
-        promoCodeID : data.promoCodeID??null
+        promoCodeID : data.promoCodeID??null,
+        otherDiscount : data.otherDiscount??null,
     }
 }
 
@@ -30,7 +31,7 @@ async function getAll(req, res){
 
 
 async function create(req, res){
-    const paymentOrder = await paymentOrderModel.create_paymentOrder(req.query.idOrder, req.query.price, req.query.promoCodeID??null)
+    const paymentOrder = await paymentOrderModel.create_paymentOrder(req.query.idOrder, req.query.price, req.query.promoCodeID??null,req.query.otherDiscount??null)
     await renderingJson(res, paymentOrder?200:400,paymentOrder?await makingResponse(paymentOrder):[])
 }
 

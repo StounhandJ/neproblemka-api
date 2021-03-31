@@ -27,6 +27,11 @@ class PaymentOrderModel{
                 type:Sequelize.INTEGER,
                 allowNull: true
             },
+            otherDiscount: {
+                type:Sequelize.INTEGER,
+                defaultValue: "0",
+                allowNull: false
+            },
             state:{
                 type:Sequelize.TINYINT,
                 allowNull: true
@@ -37,13 +42,15 @@ class PaymentOrderModel{
         })
     }
 
-    static async create_paymentOrder(idOrder, price, promoCodeID=null)
+    static async create_paymentOrder(idOrder, price, promoCodeID=null, otherDiscount=null)
     {
-        return await this.model.create({
+        let data = {
             idOrder: idOrder,
-            price: price,
-            promoCodeID: promoCodeID
-        }).catch(() => {
+            price: price
+        }
+        if (promoCodeID!==undefined && promoCodeID!==null) data["promoCodeID"] = promoCodeID
+        if (otherDiscount!==undefined && otherDiscount!==null) data["otherDiscount"] = otherDiscount
+        return await this.model.create(data).catch(() => {
             return null
         })
     }

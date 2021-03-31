@@ -28,7 +28,8 @@ id* | int | ID промокода
     "idOrder": 142,
     "price": 2500,
     "dateEnd": 1616483915,
-    "promoCodeID": 21
+    "promoCodeID": 21,
+    "otherDiscount": 5
 }
 ```
 ***
@@ -72,8 +73,9 @@ POST /paymentOrder.create
 Параметр | Тип | Описание | По умолчанию
 -- | -- | -- | --
 idOrder* | int | ID заказа
-price* | int | ID промокода
+price* | int | Сумма оплаты
 promoCodeID | int | ID промокода
+promoCodeID | int | Дополнительная скидка в %
 
 ### Примеры запросов
 ```js

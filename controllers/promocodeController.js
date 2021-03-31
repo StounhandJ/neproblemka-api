@@ -40,12 +40,13 @@ async function getAll(req, res) {
 }
 
 async function create(req, res){
-    let promo = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
+    const promo = await promoCode.create_promoCode(req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
     await renderingJson(res, promo ? 200 : 400, promo? await makingResponse(promo):[])
 }
 
 async function update(req, res) {
-    await renderingJson(res, 200, await promoCode.update_promoCode(req.query.id, req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing))
+    const promo = await promoCode.update_promoCode(req.query.id, req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
+    await renderingJson(res, promo ? 200 : 400, promo? await makingResponse(promo):[] )
 }
 
 async function del(req, res) {

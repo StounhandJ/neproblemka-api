@@ -1,5 +1,3 @@
-CREATE DATABASE neproblemka;
-USE neproblemka;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -51,6 +49,7 @@ CREATE TABLE `paymentorder` (
   `price` int NOT NULL,
   `dateEnd` int DEFAULT NULL,
   `promoCodeID` int DEFAULT NULL,
+  `otherDiscount` int DEFAULT '0',
   `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -78,6 +77,7 @@ ALTER TABLE `cheque`
 
 ALTER TABLE `clients`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `telegramID` (`telegramID`),
   ADD KEY `id` (`id`);
 
 ALTER TABLE `documents`
