@@ -1,6 +1,7 @@
 const orderModel = require('../models/index.js').orderModel
 const typeOfWorkModel = require('../models/index.js').typeOfWorkModel
 const documentModel = require("../models/index.js").documentModel
+const clientModel = require("../models/index.js").clientModel
 const renderingJson = require('../lib/View').renderingJson
 const multer  = require('multer')
 const mkdir = require('mkdirp')
@@ -22,14 +23,16 @@ diskStorage = multer.diskStorage({
 })
 
 async function makingResponse(data){
+    const client = await clientModel.get_client_id(data.idClient)
     const typeWork = await typeOfWorkModel.get_typeOfWork_id(data.typeWorkID)
     const document = await documentModel.get_document(data.documentID)
     return {
         id: data.id,
-        idClient: data.idClient,
+        idClient: client,
         description: data.description,
         document: document??null,
         typeWork:typeWork?typeWork.type:null,
+        date: data.date,
         stateOfOrder: data.stateOfOrder
     }
 }
@@ -41,7 +44,7 @@ async function get(req, res){
 
 
 async function getAll(req, res){
-    const orders = await orderModel.get_orders(req.query.idClient, req.query.typeWorkID, req.query.stateOfOrder)
+    const orders = await orderModel.get_orders(req.query.idClient, req.query.typeWorkID, req.query.stateOfOrder,req.query.offset,req.query.limit)
     let result = []
     if (orders) {
         for (const val of orders) {
@@ -53,6 +56,7 @@ async function getAll(req, res){
 
 
 async function create(req, res){
+    if (!req.query.documentID) req.query.documentID = (await documentModel.create_document(null,null, req.query.docTelegID)).id
     const typeOfWork = await typeOfWorkModel.get_typeOfWork_type(req.query.typeWork)?? await typeOfWorkModel.create_typeOfWork(req.query.typeWork)
     const order = await orderModel.create_order(req.query.idClient, req.query.description, req.query.documentID, typeOfWork.id, req.query.stateOfOrder)
     await renderingJson(res, order?200:400,order?await makingResponse(order):[])

@@ -26,7 +26,12 @@ id* | int | ID заказа
 ```
 {
     "id": 1,
-    "idClient": 45,
+    "idClient": {
+        "id": 5,
+        "mail": "tset@gmail.com",
+        "telegramID":524523,
+        "phoneNumber":890972341
+    },
     "description":"Что же за заказ",
     "document":{
         "path":"orderDocument/2146/file.txt",
@@ -34,6 +39,7 @@ id* | int | ID заказа
         "documentTelegramId":"dsgb23blbsfv3bgsdg43gssvu"
         },
     "typeWork":"Проектирование",
+    "date": 52351241125,
     "stateOfOrder":3
 }
 ```
@@ -53,6 +59,8 @@ GET /order.all
 idClient | int | ID клиента
 typeWorkID | int | ID типа работы
 stateOfOrder | int | ID состояния
+offset | int | Смещение возврата
+limit | int | Сколько вернуть
 
 *Если ни один параметр не указан, вернуться все активные заказы*
 

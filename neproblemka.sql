@@ -42,6 +42,7 @@ CREATE TABLE `orders` (
   `documentID` int DEFAULT NULL,
   `typeWorkID` int NOT NULL,
   `stateOfOrder` int NOT NULL,
+  `date` int NOT NULL,
   `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

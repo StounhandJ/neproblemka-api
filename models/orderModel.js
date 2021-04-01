@@ -32,6 +32,10 @@ class OrderModel{
                 type:Sequelize.INTEGER,
                 allowNull: false
             },
+            date : {
+                type:Sequelize.INTEGER,
+                allowNull: false
+            },
             state:{
                 type:Sequelize.TINYINT,
                 allowNull: true,
@@ -49,7 +53,8 @@ class OrderModel{
             description: description,
             documentID: documentID,
             typeWorkID: typeWorkID,
-            stateOfOrder: stateOfOrder
+            stateOfOrder: stateOfOrder,
+            date: Date.now()/1000
         }).catch(() => {
             return null
         })
@@ -65,13 +70,17 @@ class OrderModel{
         })
     }
 
-    static async get_orders(idClient, typeWorkID, stateOfOrder)
+    static async get_orders(idClient, typeWorkID, stateOfOrder, offset, limit)
     {
-        let data = {}
+        let data = {state:0}
+        let options = {}
         if (idClient!==undefined && idClient!==null) data["idClient"] = idClient
         if (typeWorkID!==undefined && typeWorkID!==null) data["typeWorkID"] = typeWorkID
         if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
-        const result = Object.values(await this.model.findAll({where: {state:0,...data}, }))
+        if (offset!==undefined && offset!==null) options["offset"] = Number.parseInt(offset)
+        if (limit!==undefined && limit!==null) options["limit"] = Number.parseInt(limit)
+        options["where"] = data
+        const result = Object.values(await this.model.findAll(options))
         return result.length<1?null:result;
     }
 

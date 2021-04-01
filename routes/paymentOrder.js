@@ -14,14 +14,14 @@ router.get('/paymentOrder.all', validate([
 ]), paymentOrderController.getAll)
 
 
-router.get('/paymentOrder.create', validate([
+router.post('/paymentOrder.create', validate([
     query('idOrder').isInt(),
     query('price').isInt(),
     query('promoCodeID').isInt().optional(),
     query('otherDiscount').isInt().optional()
 ]), paymentOrderController.create)
 
-router.get('/paymentOrder.del', validate([
+router.post('/paymentOrder.del', validate([
     query('id').isInt()
 ]), paymentOrderController.del)
 module.exports = router

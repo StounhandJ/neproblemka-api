@@ -13,7 +13,9 @@ router.get('/order', validate([
 router.get('/order.all', validate([
     query('idClient').isInt().optional(),
     query('typeWorkID').isInt().optional(),
-    query('stateOfOrder').isInt().optional()
+    query('stateOfOrder').isInt().optional(),
+    query('offset').isInt().optional(),
+    query('limit').isInt().optional(),
 ]), orderController.getAll)
 
 
