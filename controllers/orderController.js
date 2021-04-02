@@ -2,6 +2,10 @@ const orderModel = require('../models/index.js').orderModel
 const typeOfWorkModel = require('../models/index.js').typeOfWorkModel
 const documentModel = require("../models/index.js").documentModel
 const clientModel = require("../models/index.js").clientModel
+const paymentOrderModel = require("../models/index.js").paymentOrderModel
+const chequeModel = require("../models/index.js").chequeModel
+const promoCodeModel = require("../models/index.js").promoCodeModel
+
 const renderingJson = require('../lib/View').renderingJson
 const multer  = require('multer')
 const mkdir = require('mkdirp')
@@ -26,12 +30,14 @@ async function makingResponse(data){
     const client = await clientModel.get_client_id(data.idClient)
     const typeWork = await typeOfWorkModel.get_typeOfWork_id(data.typeWorkID)
     const document = await documentModel.get_document(data.documentID)
+    const payment = await paymentOrderModel.get_paymentOrder(data.id)
     return {
         id: data.id,
         idClient: client,
         description: data.description,
         document: document??null,
         typeWork:typeWork?typeWork.type:null,
+        payment: payment,
         date: data.date,
         stateOfOrder: data.stateOfOrder
     }
@@ -59,21 +65,49 @@ async function create(req, res){
     if (!req.query.documentID) req.query.documentID = (await documentModel.create_document(null,null, req.query.docTelegID)).id
     const typeOfWork = await typeOfWorkModel.get_typeOfWork_type(req.query.typeWork)?? await typeOfWorkModel.create_typeOfWork(req.query.typeWork)
     const order = await orderModel.create_order(req.query.idClient, req.query.description, req.query.documentID, typeOfWork.id, req.query.stateOfOrder)
+    await paymentOrderModel.create_paymentOrder(order.id, 0, req.query.separate, req.query.promoCodeID??null,req.query.otherDiscount??null)
     await renderingJson(res, order?200:400,order?await makingResponse(order):[])
 }
 
+async function calculate(req, res){
+    const paymentOrder = await paymentOrderModel.get_paymentOrder(req.query.id)
+    let price = req.query.price
+    if (paymentOrder){
+        const otherDiscount = paymentOrder.otherDiscount
+        let typeOfCode = 0;
+        let discount = 0;
+        if (paymentOrder.promoCodeID){
+            const promoCode = await promoCodeModel.get_promoCode_id(paymentOrder.promoCodeID)
+            typeOfCode = promoCode.typeOfCode
+            discount = promoCode.discount
+        }
+        // Скидка от промокода
+        price = price - (typeOfCode && discount !== 0?price / 100 * discount : discount)
+        // Дополнительная скидка
+        price = price - (otherDiscount !== 0?price / 100 * otherDiscount : 0)
+        if (price>=1000) {
+            await paymentOrderModel.update_paymentOrder(paymentOrder.id, price)
+            await chequeModel.create_cheque(paymentOrder.id, paymentOrder.separate ? price / 2 : price, req.query.secretKey)
+            await renderingJson(res, 200, {price: price})
+            return
+        }
+    }
+    await renderingJson(res, 400,[])
+}
+
 async function update(req, res){
-    await renderingJson(res, 200, await makingResponse(await orderModel.update_order(req.query.id, req.query.stateOfOrder)))
+    await renderingJson(res, await orderModel.update_order(req.query.id, req.query.stateOfOrder)?200:404, [])
 }
 
 async function del(req, res){
-    await renderingJson(res, 200, await orderModel.delete_order(req.query.id))
+    await renderingJson(res, await orderModel.delete_order(req.query.id)?200:404, [])
 }
 
 module.exports = {
     get: get,
     getAll: getAll,
     create: create,
+    calculate: calculate,
     update: update,
     del: del,
 

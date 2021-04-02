@@ -32,6 +32,10 @@ class PaymentOrderModel{
                 defaultValue: "0",
                 allowNull: false
             },
+            separate:{
+                type:Sequelize.TINYINT,
+                allowNull: false
+            },
             state:{
                 type:Sequelize.TINYINT,
                 allowNull: true
@@ -42,11 +46,12 @@ class PaymentOrderModel{
         })
     }
 
-    static async create_paymentOrder(idOrder, price, promoCodeID=null, otherDiscount=null)
+    static async create_paymentOrder(idOrder, price, separate, promoCodeID=null, otherDiscount=null)
     {
         let data = {
             idOrder: idOrder,
-            price: price
+            price: price,
+            separate: separate
         }
         if (promoCodeID!==undefined && promoCodeID!==null) data["promoCodeID"] = promoCodeID
         if (otherDiscount!==undefined && otherDiscount!==null) data["otherDiscount"] = otherDiscount
@@ -55,11 +60,11 @@ class PaymentOrderModel{
         })
     }
 
-    static async get_paymentOrder(id)
+    static async get_paymentOrder(idOrder)
     {
         return await this.model.findOne({
             where: {
-                id: id,
+                idOrder: idOrder,
                 state: 0
             }
         })
@@ -74,18 +79,13 @@ class PaymentOrderModel{
         return result.length<1?null:result;
     }
 
-    // static async update_paymentOrder(id, stateOfOrder)
-    // {
-    //     let data = {}
-    //     if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
-    //
-    //     if (data!=={}){
-    //         await this.model.update(
-    //             data,
-    //             { where: { id: id } }
-    //         )
-    //     }
-    // }
+    static async update_paymentOrder(id, price)
+    {
+        await this.model.update(
+            {price: price},
+            { where: { id: id } }
+        )
+    }
 
     static async delete_paymentOrder(id)
     {

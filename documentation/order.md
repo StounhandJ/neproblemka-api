@@ -1,6 +1,7 @@
 - [**order**](#-order) – *Получить заказ*
 - [**order.all**](#-orderall) – *Получить заказы*
 - [**order.create**](#-ordercreate) – *Создать заказ*
+- [**order.create**](#-ordercalculate) – *Расчет платежа*
 - [**order.update**](#-orderupdate) – *Обновить заказ*
 - [**order.del**](#-orderdel) – *Удалить заказ*
 # Описание методов: 
@@ -39,6 +40,16 @@ id* | int | ID заказа
         "documentTelegramId":"dsgb23blbsfv3bgsdg43gssvu"
         },
     "typeWork":"Проектирование",
+    "payment":{
+        "id": 14,
+        "idOrder": 1,
+        "price": 5900,
+        "dateEnd": null,
+        "promoCodeID": null,
+        "otherDiscount": 5,
+        "separate": 0,
+        "state": 0
+    },
     "date": 52351241125,
     "stateOfOrder":3
 }
@@ -92,6 +103,9 @@ idClient* | int | ID клиента
 description* | string | Описание заказа
 typeWork* | str | Имя типа работы
 stateOfOrder* | int | ID состояния
+promoCodeID* | int | ID промокода
+otherDiscount* | int | Дополнительная скидка %
+separate* | int[0,1] | По частям ли оплата
 docTelegID | string | ID документа в телеграме | null
 document | document | Документ | null
 
@@ -107,6 +121,34 @@ document | document | Документ | null
 {
     [Возвращаемые поля идентичны /order]
 }
+```
+***
+
+
+
+## • order.calculate
+Создать заказ
+```js
+POST /order.calculate
+```
+
+### Все доступные параметры
+Параметр | Тип | Описание | По умолчанию
+-- | -- | -- | --
+id* | int | ID клиента
+price* | int | Сумма оплаты в копейках
+secretKey* | str | Секретный ключ
+
+*Вся оплата и расчет проводиться в копейках*
+
+### Примеры запросов
+```js
+/order.calculate?id=2&price=17000&secretKey=8e1514765fa70329a89612e758af5f9f
+```
+
+### Пример ответа
+```
+[]
 ```
 ***
 
@@ -132,9 +174,7 @@ stateOfOrder* | int | ID состояния
 
 ### Пример ответа
 ```
-{
-    [Возвращаемые поля идентичны /order]
-}
+[]
 ```
 ***
 
@@ -158,8 +198,6 @@ id* | int | ID заказа
 
 ### Пример ответа
 ```
-{
-    [Возвращаемые поля идентичны /order]
-}
+[]
 ```
 ***

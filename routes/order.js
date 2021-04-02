@@ -24,9 +24,17 @@ router.post('/order.create', validate([
     query('description').isString(),
     query('typeWork').isString(),
     query('stateOfOrder').isInt(),
+    query('promoCodeID').isInt(),
+    query('otherDiscount').isInt(),
+    query('separate').isInt(),
     query('docTelegID').isString().optional(),
 ]), upload.any(), orderController.create)
 
+router.post('/order.calculate', validate([
+    query('id').isInt(),
+    query('price').isInt(),
+    query('secretKey').isString(),
+]), orderController.calculate)
 
 router.post('/order.update', validate([
     query('id').isInt(),

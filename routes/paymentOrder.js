@@ -13,14 +13,6 @@ router.get('/paymentOrder.all', validate([
     query('promoCodeID').isInt().optional()
 ]), paymentOrderController.getAll)
 
-
-router.post('/paymentOrder.create', validate([
-    query('idOrder').isInt(),
-    query('price').isInt(),
-    query('promoCodeID').isInt().optional(),
-    query('otherDiscount').isInt().optional()
-]), paymentOrderController.create)
-
 router.post('/paymentOrder.del', validate([
     query('id').isInt()
 ]), paymentOrderController.del)

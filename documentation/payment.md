@@ -1,6 +1,5 @@
 - [**paymentOrder**](#-paymentorder) – *Получить оплату заказа*
 - [**paymentOrder.all**](#-paymentorderall) – *Получить оплаты заказов*
-- [**paymentOrder.create**](#-paymentordercreate) – *Создать оплату заказа*
 - [**paymentOrder.del**](#-paymentorderdel) – *Удалить оплату заказа*
 
 # Описание методов: 
@@ -51,35 +50,6 @@ promoCodeID | int | ID промокода
 ### Примеры запросов
 ```js
 /paymentOrder.all?idOrder=4
-```
-
-### Пример ответа
-```
-{
-    [Возвращаемые поля идентичны /paymentOrder]
-}
-```
-***
-
-
-
-## • paymentOrder.create
-Создать оплату заказа
-```js
-POST /paymentOrder.create
-```
-
-### Все доступные параметры
-Параметр | Тип | Описание | По умолчанию
--- | -- | -- | --
-idOrder* | int | ID заказа
-price* | int | Сумма оплаты
-promoCodeID | int | ID промокода
-promoCodeID | int | Дополнительная скидка в %
-
-### Примеры запросов
-```js
-/paymentOrder.create?idOrder=4&price=15000
 ```
 
 ### Пример ответа
