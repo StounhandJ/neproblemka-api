@@ -3,7 +3,8 @@ const {DB_login, DB_password, DB_name, DB_host} = require("../config.js")
 const sequelize = new Sequelize(DB_name,DB_login,DB_password,{
     dialect: "mysql",
     host: DB_host,
-    operatorsAliases: false
+    operatorsAliases: false,
+    logging: false
 })
 
 module.exports = {

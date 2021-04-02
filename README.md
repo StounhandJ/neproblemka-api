@@ -12,6 +12,15 @@
 Страница перезагрузится, если вы внесете изменения.
 Вы также увидите любые ошибки в консоли
 
+### `npm run start`
+
+Запускает приложение.
+Открыть [http://localhost:3000](http://localhost:3000) для просмотра его в браузере.
+
+
+### `npm run test`
+
+Проводит ряд тестов модулей
 ## Дополнительные файлы
 
 1. Документация к API [api.md](https://github.com/StounhandJ/neproblemka-api/blob/master/documentation/api.md)
