@@ -51,11 +51,11 @@ class ClientModel{
         if (telegramID!==undefined && telegramID!==null) data["telegramID"] = telegramID
         if (phoneNumber!==undefined && phoneNumber!==null) data["phoneNumber"] = phoneNumber
 
-        if (data!=={}){
-            await this.model.update(
+        if (Object.keys(data).length !== 0){
+            return (await this.model.update(
                 data,
                 { where: { id: id } }
-            )
+            ))[0]
         }
     }
 
