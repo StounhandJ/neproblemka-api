@@ -1,11 +1,9 @@
 const express = require('express')
-const path = require('path')
 const requestTime = require('./middlewares.js').requestTime
 const logger = require('./middlewares.js').logger
 const orderRoutes = require('./routes/order.js')
 const clientRoutes = require('./routes/client.js')
 const promoCodesRoutes = require('./routes/promocode.js')
-const paymentOrderRoutes = require('./routes/paymentOrder.js')
 const chequeRoutes = require('./routes/cheque.js')
 const documentRoutes = require('./routes/document.js')
 const renderingError404 = require("./lib/View.js").renderingError404
@@ -20,7 +18,6 @@ const app = express()
 app.use(orderRoutes)
 app.use(clientRoutes)
 app.use(promoCodesRoutes)
-app.use(paymentOrderRoutes)
 app.use(chequeRoutes)
 app.use(documentRoutes)
 

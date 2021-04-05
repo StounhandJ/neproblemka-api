@@ -13,7 +13,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cheque` (
   `id` int NOT NULL,
-  `idPaymentOrder` int NOT NULL,
+  `idOrder` int NOT NULL,
   `amount` int NOT NULL,
   `date` int NOT NULL,
   `secretKey` varchar(255) NOT NULL,
@@ -43,18 +43,11 @@ CREATE TABLE `orders` (
   `documentID` int DEFAULT NULL,
   `typeWorkID` int NOT NULL,
   `stateOfOrder` int NOT NULL,
-  `date` int NOT NULL,
-  `state` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `paymentorder` (
-  `id` int NOT NULL,
-  `idOrder` int NOT NULL,
   `price` int NOT NULL,
-  `dateEnd` int DEFAULT NULL,
   `promoCodeID` int DEFAULT NULL,
-  `otherDiscount` int DEFAULT '0',
+  `otherDiscount` int NOT NULL,
   `separate` tinyint(1) NOT NULL,
+  `date` int NOT NULL,
   `state` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -78,7 +71,7 @@ CREATE TABLE `typeofwork` (
 ALTER TABLE `cheque`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`),
-  ADD KEY `idPaymentOrder` (`idPaymentOrder`);
+  ADD KEY `idOrder` (`idOrder`);
 
 ALTER TABLE `clients`
   ADD PRIMARY KEY (`id`),
@@ -94,12 +87,7 @@ ALTER TABLE `orders`
   ADD KEY `id` (`id`),
   ADD KEY `idClient` (`idClient`),
   ADD KEY `document` (`documentID`),
-  ADD KEY `typeWorkID` (`typeWorkID`);
-
-ALTER TABLE `paymentorder`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id` (`id`),
-  ADD KEY `idOrder` (`idOrder`),
+  ADD KEY `typeWorkID` (`typeWorkID`),
   ADD KEY `promoCodeID` (`promoCodeID`);
 
 ALTER TABLE `promocodes`
@@ -124,9 +112,6 @@ ALTER TABLE `documents`
 ALTER TABLE `orders`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `paymentorder`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
 ALTER TABLE `promocodes`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
@@ -135,16 +120,13 @@ ALTER TABLE `typeofwork`
 
 
 ALTER TABLE `cheque`
-  ADD CONSTRAINT `cheque_ibfk_1` FOREIGN KEY (`idPaymentOrder`) REFERENCES `paymentorder` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `cheque_ibfk_1` FOREIGN KEY (`idOrder`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`idClient`) REFERENCES `clients` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`documentID`) REFERENCES `documents` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`typeWorkID`) REFERENCES `typeofwork` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
-ALTER TABLE `paymentorder`
-  ADD CONSTRAINT `paymentorder_ibfk_1` FOREIGN KEY (`idOrder`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `paymentorder_ibfk_2` FOREIGN KEY (`promoCodeID`) REFERENCES `promocodes` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`typeWorkID`) REFERENCES `typeofwork` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`promoCodeID`) REFERENCES `promocodes` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

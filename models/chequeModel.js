@@ -11,7 +11,7 @@ class chequeModel{
                 primaryKey: true,
                 allowNull: false
             },
-            idPaymentOrder  : {
+            idOrder  : {
                 type:Sequelize.INTEGER,
                 allowNull: false
             },
@@ -38,10 +38,10 @@ class chequeModel{
         })
     }
 
-    static async create_cheque(idPaymentOrder, amount, secretKey)
+    static async create_cheque(idOrder, amount, secretKey)
     {
         return await this.model.create({
-            idPaymentOrder: idPaymentOrder,
+            idOrder: idOrder,
             amount: amount,
             secretKey: secretKey,
             date: Date.now()/1000

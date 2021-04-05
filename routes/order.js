@@ -30,11 +30,23 @@ router.post('/order.create', validate([
     query('docTelegID').isString().optional(),
 ]), upload.any(), orderController.create)
 
-router.post('/order.calculate', validate([
+router.post('/order.priceSet', validate([
     query('id').isInt(),
-    query('price').isInt(),
+    query('price').isInt()
+]), orderController.priceSet)
+
+router.post('/order.chequeCreate', validate([
+    query('id').isInt(),
     query('secretKey').isString(),
-]), orderController.calculate)
+]), orderController.pass)
+
+router.post('/order.payment', validate([
+    query('id').isInt(),
+]), orderController.pass)
+
+router.post('/order.chequeCompleted', validate([
+    query('secretKey').isString(),
+]), orderController.pass)
 
 router.post('/order.update', validate([
     query('id').isInt(),

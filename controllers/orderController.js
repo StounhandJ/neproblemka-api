@@ -64,35 +64,49 @@ async function getAll(req, res){
 async function create(req, res){
     if (!req.query.documentID) req.query.documentID = (await documentModel.create_document(null,null, req.query.docTelegID)).id
     const typeOfWork = await typeOfWorkModel.get_typeOfWork_type(req.query.typeWork)?? await typeOfWorkModel.create_typeOfWork(req.query.typeWork)
-    const order = await orderModel.create_order(req.query.idClient, req.query.description, req.query.documentID, typeOfWork.id, req.query.stateOfOrder)
-    await paymentOrderModel.create_paymentOrder(order.id, 0, req.query.separate, req.query.promoCodeID??null,req.query.otherDiscount??null)
+    const order = await orderModel.create_order(req.query.idClient, req.query.description, req.query.documentID, typeOfWork.id, req.query.separate, req.query.promoCodeID??null,req.query.otherDiscount??null)
     await renderingJson(res, order?200:400,order?await makingResponse(order):[])
 }
 
-async function calculate(req, res){
-    const paymentOrder = await paymentOrderModel.get_paymentOrder(req.query.id)
+async function priceSet(req, res){
+    const order = await orderModel.get_order(req.query.id)
+    if (!order) {await renderingJson(res, 404, []); return;}
     let price = req.query.price
-    if (paymentOrder){
-        const otherDiscount = paymentOrder.otherDiscount
-        let typeOfCode = 0;
-        let discount = 0;
-        if (paymentOrder.promoCodeID){
-            const promoCode = await promoCodeModel.get_promoCode_id(paymentOrder.promoCodeID)
-            typeOfCode = promoCode.typeOfCode
-            discount = promoCode.discount
-        }
-        // Скидка от промокода
-        price = price - (typeOfCode && discount !== 0?price / 100 * discount : discount)
-        // Дополнительная скидка
-        price = price - (otherDiscount !== 0?price / 100 * otherDiscount : 0)
-        if (price>=1000) {
-            await paymentOrderModel.update_paymentOrder(paymentOrder.id, price)
-            await chequeModel.create_cheque(paymentOrder.id, paymentOrder.separate ? price / 2 : price, req.query.secretKey)
-            await renderingJson(res, 200, {price: price})
-            return
-        }
+    const otherDiscount = order.otherDiscount
+    let typeOfCode = 0;
+    let discount = 0;
+    if (order.promoCodeID){
+        const promoCode = await promoCodeModel.get_promoCode_id(paymentOrder.promoCodeID)
+        typeOfCode = promoCode.typeOfCode
+        discount = promoCode.discount
     }
-    await renderingJson(res, 400,[])
+    // Скидка от промокода
+    price = price - (typeOfCode && discount !== 0?price / 100 * discount : discount)
+    // Дополнительная скидка
+    price = price - (otherDiscount !== 0?price / 100 * otherDiscount : 0)
+    if (price>=1000) {
+        await orderModel.update_order(req.query.id, null, price)
+        order.price = price
+        await renderingJson(res, 200,await makingResponse(order))
+    }
+    else
+    {
+        await renderingJson(res, 400,[])
+    }
+
+}
+
+async function pass(req, res){
+    await renderingJson(res, 400)
+}
+
+async function payment(req, res){
+    const cheque = await chequeModel.get_cheque_secretKey(req.query.secretKey)
+    if (cheque){
+        const order = await orderModel.get_order(cheque.idOrder)
+        await chequeModel.delete_cheque(cheque.id)
+        await orderModel.update_order(order.id, order.stateOfOrder+2)
+    }
 }
 
 async function update(req, res){
@@ -107,9 +121,11 @@ module.exports = {
     get: get,
     getAll: getAll,
     create: create,
-    calculate: calculate,
+    priceSet: priceSet,
+    payment: payment,
     update: update,
     del: del,
+    pass: pass,
 
     diskStorage: diskStorage
 }

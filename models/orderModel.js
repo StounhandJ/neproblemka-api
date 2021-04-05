@@ -32,6 +32,22 @@ class OrderModel{
                 type:Sequelize.INTEGER,
                 allowNull: false
             },
+            price : {
+                type:Sequelize.INTEGER,
+                allowNull: false
+            },
+            promoCodeID  : {
+                type:Sequelize.INTEGER,
+                allowNull: true
+            },
+            otherDiscount : {
+                type:Sequelize.INTEGER,
+                allowNull: false
+            },
+            separate : {
+                type:Sequelize.TINYINT,
+                allowNull: false
+            },
             date : {
                 type:Sequelize.INTEGER,
                 allowNull: false
@@ -46,14 +62,18 @@ class OrderModel{
         })
     }
 
-    static async create_order(idClient, description, documentID, typeWorkID, stateOfOrder)
+    static async create_order(idClient, description, documentID, typeWorkID, separate, promoCodeID, otherDiscount)
     {
         return await this.model.create({
             idClient: idClient,
             description: description,
             documentID: documentID,
             typeWorkID: typeWorkID,
-            stateOfOrder: stateOfOrder,
+            stateOfOrder: 0,
+            promoCodeID: promoCodeID,
+            otherDiscount: otherDiscount??0,
+            separate: separate,
+            price: 0,
             date: Date.now()/1000
         }).catch(() => {
             return null
@@ -84,10 +104,12 @@ class OrderModel{
         return result.length<1?null:result;
     }
 
-    static async update_order(id, stateOfOrder)
+    static async update_order(id, stateOfOrder, price = null)
     {
         let data = {}
         if (stateOfOrder!==undefined && stateOfOrder!==null) data["stateOfOrder"] = stateOfOrder
+        if (price!==undefined && price!==null) data["price"] = price
+
 
         if (data!=={}){
             await this.model.update(
