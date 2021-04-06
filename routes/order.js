@@ -18,13 +18,11 @@ router.get('/order.all', validate([
     query('limit').isInt().optional(),
 ]), orderController.getAll)
 
-
 router.post('/order.create', validate([
     query('idClient').isInt(),
     query('description').isString(),
     query('typeWork').isString(),
-    query('stateOfOrder').isInt(),
-    query('promoCodeID').isInt(),
+    query('promoCodeID').isInt().optional(),
     query('otherDiscount').isInt(),
     query('separate').isInt(),
     query('docTelegID').isString().optional(),
@@ -38,20 +36,20 @@ router.post('/order.priceSet', validate([
 router.post('/order.chequeCreate', validate([
     query('id').isInt(),
     query('secretKey').isString(),
-]), orderController.pass)
+]), orderController.chequeCreate)
 
 router.post('/order.payment', validate([
     query('id').isInt(),
-]), orderController.pass)
+]), orderController.payment)
 
 router.post('/order.chequeCompleted', validate([
     query('secretKey').isString(),
-]), orderController.pass)
+]), orderController.chequeCompleted)
 
-router.post('/order.update', validate([
-    query('id').isInt(),
-    query('stateOfOrder').isInt()
-]), orderController.update)
+// router.post('/order.update', validate([
+//     query('id').isInt(),
+//     query('stateOfOrder').isInt()
+// ]), orderController.update)
 
 router.post('/order.del', validate([
     query('id').isInt()

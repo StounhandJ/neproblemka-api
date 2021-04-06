@@ -2,7 +2,6 @@ const orderModel = require('../models/index.js').orderModel
 const typeOfWorkModel = require('../models/index.js').typeOfWorkModel
 const documentModel = require("../models/index.js").documentModel
 const clientModel = require("../models/index.js").clientModel
-const paymentOrderModel = require("../models/index.js").paymentOrderModel
 const chequeModel = require("../models/index.js").chequeModel
 const promoCodeModel = require("../models/index.js").promoCodeModel
 
@@ -30,14 +29,12 @@ async function makingResponse(data){
     const client = await clientModel.get_client_id(data.idClient)
     const typeWork = await typeOfWorkModel.get_typeOfWork_id(data.typeWorkID)
     const document = await documentModel.get_document(data.documentID)
-    const payment = await paymentOrderModel.get_paymentOrder(data.id)
     return {
         id: data.id,
         idClient: client,
         description: data.description,
         document: document??null,
         typeWork:typeWork?typeWork.type:null,
-        payment: payment,
         date: data.date,
         stateOfOrder: data.stateOfOrder
     }
@@ -96,17 +93,40 @@ async function priceSet(req, res){
 
 }
 
-async function pass(req, res){
-    await renderingJson(res, 400)
+async function chequeCreate(req, res){
+    const order = await orderModel.get_order(req.query.id)
+    if (!order) {await renderingJson(res, 404, []); return;}
+
+    await chequeModel.create_cheque(order.id, order.separate?order.price/2:order.price, req.query.secretKey)
+
+    await renderingJson(res, 200, await makingResponse(order))
 }
 
 async function payment(req, res){
+    const cheque = await chequeModel.get_cheque_orderID(req.query.id)
+
+    await renderingJson(res, cheque?200:404, cheque)
+}
+
+async function chequeCompleted(req, res){
     const cheque = await chequeModel.get_cheque_secretKey(req.query.secretKey)
-    if (cheque){
-        const order = await orderModel.get_order(cheque.idOrder)
-        await chequeModel.delete_cheque(cheque.id)
-        await orderModel.update_order(order.id, order.stateOfOrder+2)
-    }
+    if (!cheque) {await renderingJson(res, 404, []); return;}
+
+    const order = await orderModel.get_order(cheque.idOrder)
+    let stateOfOrder = -1
+
+    if (order.stateOfOrder===1) stateOfOrder=11
+    if (order.stateOfOrder===2) stateOfOrder=12
+
+    order.stateOfOrder = stateOfOrder
+    await orderModel.update_order(order.id, stateOfOrder)
+    await chequeModel.delete_cheque(cheque.id)
+
+    await renderingJson(res, cheque?200:404, await makingResponse(order))
+}
+
+async function pass(req, res){
+    await renderingJson(res, 400)
 }
 
 async function update(req, res){
@@ -126,6 +146,8 @@ module.exports = {
     update: update,
     del: del,
     pass: pass,
+    chequeCreate: chequeCreate,
+    chequeCompleted: chequeCompleted,
 
     diskStorage: diskStorage
 }

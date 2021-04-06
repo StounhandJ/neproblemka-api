@@ -59,12 +59,23 @@ class chequeModel{
         })
     }
 
+    static async get_cheque_orderID(idOrder)
+    {
+        return await this.model.findOne({
+            where:{
+                idOrder: idOrder,
+                state: 0
+            }
+        })
+    }
+
 
     static async get_cheque_secretKey(secretKey)
     {
         return await this.model.findOne({
             where:{
-                secretKey: secretKey
+                secretKey: secretKey,
+                state: 0
             }
         })
     }
