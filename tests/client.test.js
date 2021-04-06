@@ -13,7 +13,19 @@ describe('ClientRequests: ', function() {
 
     beforeEach(()=>{
         responseClient = {id:723,mail:mail, telegramID:telegramID,phoneNumber:89096979578}
-
+        // ----Заглушки---- //
+        models.clientModel.create_client.mockReturnValue(responseClient)
+        models.clientModel.delete_client.mockReturnValue(responseClient)
+        models.clientModel.update_client.mockReturnValue((id, mail, telegramID, phoneNumber)=>{
+            return id && (mail || telegramID || phoneNumber)? 1:0
+        })
+        models.clientModel.get_client_id.mockReturnValue((id)=>{
+            return id>0?responseClient:null
+        })
+        models.clientModel.get_client_telegramID.mockReturnValue(((telegramID)=>{
+            return telegramID>0?responseClient:null
+        }))
+        // ---------------- //
         }
     )
 
@@ -27,8 +39,6 @@ describe('ClientRequests: ', function() {
 
 
     it('create', function(done) {
-        models.clientModel.create_client.mockReturnValue(responseClient)
-
         request(app).post("/client.create")
             .query({telegramID:telegramID,mail:mail})
             .expect((res) => {
@@ -52,8 +62,6 @@ describe('ClientRequests: ', function() {
 
 
         it('wrong one update', function(done) {
-            models.clientModel.update_client.mockReturnValue(0)
-
             request(app).post("/client.update")
                 .query({mail:mailUpdate})
                 .expect((res) => {
@@ -71,10 +79,6 @@ describe('ClientRequests: ', function() {
 
 
         it('update', function(done) {
-            models.clientModel.update_client.mockReturnValue((id, mail, telegramID, phoneNumber)=>{
-                return id && (mail || telegramID || phoneNumber)? 1:0
-            })
-
             request(app).post("/client.update")
                 .query({id:clientID,mail:mailUpdate})
                 .expect((res) => {
@@ -91,14 +95,6 @@ describe('ClientRequests: ', function() {
         });
 
         it('wrong one get', function(done) {
-            models.clientModel.get_client_id.mockReturnValue((id)=>{
-                return id>0?responseClient:null
-            })
-            models.clientModel.get_client_telegramID.mockReturnValue(((telegramID)=>{
-                return telegramID>0?responseClient:null
-            }))
-
-
             request(app).get("/client")
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
@@ -121,9 +117,6 @@ describe('ClientRequests: ', function() {
         })
 
         it('get', function(done) {
-            models.clientModel.get_client_id.mockReturnValue(responseClient)
-            models.clientModel.get_client_telegramID.mockReturnValue(responseClient)
-
             request(app).get("/client")
                 .query({id:clientID})
                 .expect((res) => {
@@ -147,8 +140,6 @@ describe('ClientRequests: ', function() {
         });
 
         it('wrong one del', function(done) {
-            models.clientModel.delete_client.mockReturnValue(responseClient)
-
             request(app).post("/client.del")
                 .query()
                 .expect((res) => {
@@ -165,8 +156,6 @@ describe('ClientRequests: ', function() {
         });
 
         it('del', function(done) {
-            models.clientModel.delete_client.mockReturnValue(responseClient)
-
             request(app).post("/client.del")
                 .query({id:clientID})
                 .expect((res) => {
