@@ -50,7 +50,6 @@ GET /promocode.all
 ### Все доступные параметры
 Параметр | Тип | Описание | По умолчанию
 -- | -- | -- | --
-typeOfCode | int[0,1] | Тип промокода
 limitUsing | int | Количество использований
 offset | int | Смещение возврата 
 limit | int | Сколько вернуть
@@ -59,7 +58,7 @@ limit | int | Сколько вернуть
 
 ### Примеры запросов
 ```js
-/promocode.all?typeOfCode=1&limit=10
+/promocode.all?offset=5&limit=10
 ```
 
 ### Пример ответа
@@ -117,6 +116,8 @@ codeName | str | Код промокода
 discount | int | Скидка
 typeOfCode | int | Тип кода
 limitUsing | int | Количество
+
+*Минимум один параметр должен передаваться для обновления*
 
 ### Примеры запросов
 ```js

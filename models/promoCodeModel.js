@@ -74,11 +74,10 @@ class promoCodeModel{
         })
     }
 
-    static async get_promoCodes(typeOfCode=null, limitUsing=null, offset, limit)
+    static async get_promoCodes(limitUsing=null, offset, limit)
     {
         let data = {state:0}
         let options = {}
-        if (typeOfCode!==undefined && typeOfCode!==null) data["typeOfCode"] = typeOfCode
         if (limitUsing!==undefined && limitUsing!==null) data["limitUsing"] = limitUsing
         if (offset!==undefined && offset!==null) options["offset"] = Number.parseInt(offset)
         if (limit!==undefined && limit!==null) options["limit"] = Number.parseInt(limit)

@@ -10,10 +10,6 @@ router.get("/promocode",validate([
 ]), promoCodeController.get)
 
 router.get('/promocode.all', validate([
-    query('id').isInt().optional(), 
-    query('codeName').isString().optional(),
-    query('name').isString().optional(),
-    query('discount').isInt().optional(),
     query('limitUsing').isInt().optional(),
     query('offset').isInt().optional(),
     query('limit').isInt().optional()

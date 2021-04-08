@@ -29,7 +29,7 @@ async function get(req, res) {
 }
 
 async function getAll(req, res) {
-    const promos = await promoCode.get_promoCodes(req.query.typeOfCode, req.query.limitUsing,req.query.offset,req.query.limit)
+    const promos = await promoCode.get_promoCodes(req.query.limitUsing,req.query.offset,req.query.limit)
     let result = []
     if (promos) {
         for (const val of promos) {
@@ -45,7 +45,10 @@ async function create(req, res){
 }
 
 async function update(req, res) {
-    const promo = await promoCode.update_promoCode(req.query.id, req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
+    let promo = null
+    if (req.query.name || req.query.codeName || req.query.discount || req.query.typeOfCode || req.query.limitUsing) {
+        promo = await promoCode.update_promoCode(req.query.id, req.query.name, req.query.codeName, req.query.discount, req.query.typeOfCode, req.query.limitUsing)
+    }
     await renderingJson(res, promo ? 200 : 400, promo? await makingResponse(promo):[] )
 }
 
