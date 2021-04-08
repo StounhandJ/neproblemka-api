@@ -23,8 +23,10 @@ app.use(documentRoutes)
 
 app.use(renderingError404)
 
-app.listen(PORT, () => {
-    console.log(`Server has been started on port ${PORT}...`)
-})
+if(!module.parent){
+    app.listen(PORT, () => {
+        console.log(`Server has been started on port ${PORT}...`)
+    })
+}
 
-module.exports = app
+module.exports = app.listen()
