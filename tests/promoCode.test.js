@@ -86,6 +86,36 @@ describe('Promo Code Requests: ', function (){
             .end(done);
     });
 
+    it('create err type', function (done) {
+        request.post("/promocode.create")
+            .query({name:name,codeName:codeName,discount:"Строка",typeOfCode:"Строка",limitUsing:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.post("/promocode.create")
+            .query({name:name,discount:"Строка",limitUsing:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.post("/promocode.create")
+            .query({codeName:codeName,typeOfCode:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.post("/promocode.create")
+            .query({discount:"Строка",typeOfCode:"Строка",limitUsing:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+    });
+
     it('update', function(done) {
         request.post("/promocode.update")
             .query({id:promoID})
@@ -132,7 +162,14 @@ describe('Promo Code Requests: ', function (){
             .end(done);
 
         request.post("/promocode.update")
-            .query({discount:"Строка"})
+            .query({id:promoID,discount:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.post("/promocode.update")
+            .query({id:promoID})
             .expect((res) => {
                 expect(res.body.code).toEqual(400);
             })
@@ -206,6 +243,20 @@ describe('Promo Code Requests: ', function (){
     it('all', function (done){
        request.get("/promocode.all")
            .query({limitUsing:limitUsing, limit:5,  offset:5})
+           .expect((res) => {
+               expect(res.body.code).toEqual(200);
+           })
+           .end(done);
+
+       request.get("/promocode.all")
+           .query({offset:5})
+           .expect((res) => {
+               expect(res.body.code).toEqual(200);
+           })
+           .end(done);
+
+       request.get("/promocode.all")
+           .query({limitUsing:limitUsing, limit:5})
            .expect((res) => {
                expect(res.body.code).toEqual(200);
            })
