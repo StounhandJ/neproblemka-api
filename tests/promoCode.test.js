@@ -16,17 +16,16 @@ describe('Promo Code Requests: ', function (){
     let discount = 10
     const typeOfCode = 1
     const limitUsing = 15
-    const state = 0
 
     beforeEach(()=> {
-        responseClient = {id: 1, name: "frog", code: "frogCode", discount: 10, typeOfCode: 1, limitUsing: 15, state: 0}
+        const responsePromoCode = {id: 1, name: "frog", code: "frogCode", discount: 10, typeOfCode: 1, limitUsing: 15, state: 0}
         // ----Заглушки---- //
-        models.promoCodeModel.create_promoCode.mockReturnValue(responseClient)
-        models.promoCodeModel.delete_promoCode.mockReturnValue(responseClient)
-        models.promoCodeModel.update_promoCode.mockReturnValue(responseClient)
-        models.promoCodeModel.get_promoCode_id.mockReturnValue(responseClient)
-        models.promoCodeModel.get_promoCode_code.mockReturnValue(responseClient)
-        models.promoCodeModel.get_promoCodes.mockReturnValue([responseClient])
+        models.promoCodeModel.create_promoCode.mockReturnValue(responsePromoCode)
+        models.promoCodeModel.delete_promoCode.mockReturnValue(responsePromoCode)
+        models.promoCodeModel.update_promoCode.mockReturnValue(responsePromoCode)
+        models.promoCodeModel.get_promoCode_id.mockReturnValue(responsePromoCode)
+        models.promoCodeModel.get_promoCode_code.mockReturnValue(responsePromoCode)
+        models.promoCodeModel.get_promoCodes.mockReturnValue([responsePromoCode])
         // ---------------- //
 
     }
@@ -117,13 +116,6 @@ describe('Promo Code Requests: ', function (){
     });
 
     it('update', function(done) {
-        request.post("/promocode.update")
-            .query({id:promoID})
-            .expect((res) => {
-                expect(res.body.code).toEqual(200);
-            })
-            .end(done);
-
         request.post("/promocode.update")
             .query({id:promoID,name:name,codeName:codeName,discount:discount,typeOfCode:typeOfCode,limitUsing:limitUsing})
             .expect((res) => {
