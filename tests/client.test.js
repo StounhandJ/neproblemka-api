@@ -1,7 +1,13 @@
-const request = require("supertest");
+const server = require("../index");
+const request = require("supertest").agent(server);
 const models = require("../models/index");
-const app = require("../index");
 jest.mock("../models/index")
+
+afterAll((done)=>{
+        server.close();
+        done();
+    })
+
 describe('ClientRequests: ', function() {
 
     let clientID = -1
@@ -30,30 +36,30 @@ describe('ClientRequests: ', function() {
     )
 
     it('defined', function(done) {
-        request(app).get("/client").expect(200).end(done)
-        request(app).get("/client.all").expect(200).end(done)
-        request(app).post("/client.create").expect(200).end(done)
-        request(app).post("/client.update").expect(200).end(done)
-        request(app).post("/client.del").expect(200).end(done)
+        request.get("/client").expect(200).end(done)
+        request.get("/client.all").expect(200).end(done)
+        request.post("/client.create").expect(200).end(done)
+        request.post("/client.update").expect(200).end(done)
+        request.post("/client.del").expect(200).end(done)
     })
 
 
     it('create', function(done) {
-        request(app).post("/client.create")
+        request.post("/client.create")
             .query({telegramID:telegramID,mail:mail})
             .expect((res) => {
                 expect(res.body.code).toEqual(200);
             })
             .end(done);
 
-        request(app).post("/client.create")
+        request.post("/client.create")
             .query({telegramID:telegramID})
             .expect((res) => {
                 expect(res.body.code).toEqual(200);
             })
             .end(done);
 
-        request(app).post("/client.create")
+        request.post("/client.create")
             .expect((res) => {
                 expect(res.body.code).toEqual(200);
             })
@@ -62,14 +68,14 @@ describe('ClientRequests: ', function() {
 
 
         it('wrong one update', function(done) {
-            request(app).post("/client.update")
+            request.post("/client.update")
                 .query({mail:mailUpdate})
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
                 })
                 .end(done);
 
-            request(app).post("/client.update")
+            request.post("/client.update")
                 .query({id:clientID,telegramID:"Строка"})
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
@@ -79,14 +85,14 @@ describe('ClientRequests: ', function() {
 
 
         it('update', function(done) {
-            request(app).post("/client.update")
+            request.post("/client.update")
                 .query({id:clientID,mail:mailUpdate})
                 .expect((res) => {
                     expect(res.body.code).toEqual(200);
                 })
                 .end(done);
 
-            request(app).post("/client.update")
+            request.post("/client.update")
                 .query({id:clientID,telegramID:telegramIDUpdate})
                 .expect((res) => {
                     expect(res.body.code).toEqual(200);
@@ -95,20 +101,20 @@ describe('ClientRequests: ', function() {
         });
 
         it('wrong one get', function(done) {
-            request(app).get("/client")
+            request.get("/client")
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
                 })
                 .end(done);
 
-            request(app).get("/client")
+            request.get("/client")
                 .query({id:"Строка",telegramID:"Строка"})
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
                 })
                 .end(done);
 
-            request(app).get("/client")
+            request.get("/client")
                 .query({telegramID:"Строка"})
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
@@ -117,21 +123,21 @@ describe('ClientRequests: ', function() {
         })
 
         it('get', function(done) {
-            request(app).get("/client")
+            request.get("/client")
                 .query({id:clientID})
                 .expect((res) => {
                     expect(res.body.code).toEqual(200);
                 })
                 .end(done);
 
-            request(app).get("/client")
+            request.get("/client")
                 .query({telegramID:telegramID})
                 .expect((res) => {
                     expect(res.body.code).toEqual(200);
                 })
                 .end(done);
 
-            request(app).get("/client")
+            request.get("/client")
                 .query({id:clientID, telegramID:telegramID})
                 .expect((res) => {
                     expect(res.body.code).toEqual(200);
@@ -140,14 +146,14 @@ describe('ClientRequests: ', function() {
         });
 
         it('wrong one del', function(done) {
-            request(app).post("/client.del")
+            request.post("/client.del")
                 .query()
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
                 })
                 .end(done);
 
-            request(app).post("/client.del")
+            request.post("/client.del")
                 .query({id:"Строка"})
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
@@ -156,7 +162,7 @@ describe('ClientRequests: ', function() {
         });
 
         it('del', function(done) {
-            request(app).post("/client.del")
+            request.post("/client.del")
                 .query({id:clientID})
                 .expect((res) => {
                     expect(res.body.code).toEqual(200);
