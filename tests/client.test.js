@@ -43,6 +43,13 @@ describe('ClientRequests: ', function() {
         request.post("/client.del").expect(200).end(done)
     })
 
+    it('wrong one create', function(done) {
+        request.post("/client.create")
+                .expect((res) => {
+                    expect(res.body.code).toEqual(400);
+                })
+                .end(done);
+    })
 
     it('create', function(done) {
         request.post("/client.create")
@@ -54,12 +61,6 @@ describe('ClientRequests: ', function() {
 
         request.post("/client.create")
             .query({telegramID:telegramID})
-            .expect((res) => {
-                expect(res.body.code).toEqual(200);
-            })
-            .end(done);
-
-        request.post("/client.create")
             .expect((res) => {
                 expect(res.body.code).toEqual(200);
             })
@@ -77,6 +78,13 @@ describe('ClientRequests: ', function() {
 
             request.post("/client.update")
                 .query({id:clientID,telegramID:"Строка"})
+                .expect((res) => {
+                    expect(res.body.code).toEqual(400);
+                })
+                .end(done);
+
+            request.post("/client.update")
+                .query({id:clientID})
                 .expect((res) => {
                     expect(res.body.code).toEqual(400);
                 })

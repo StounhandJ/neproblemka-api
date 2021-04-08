@@ -102,9 +102,10 @@ POST /client.update
 ### Все доступные параметры
 Параметр | Тип | Описание | По умолчанию
 -- | -- | -- | --
-mail | string | Почта клиента | ""
-telegramID | int | ID telegram аккаунта | 0
-phoneNumber | int | Телефон | 0
+id* | int | clientID | 
+mail | string | Почта клиента | 
+telegramID | int | ID telegram аккаунта | 
+phoneNumber | int | Телефон | 
 
 *Минимум один параметр должен передаваться для обновления*
 

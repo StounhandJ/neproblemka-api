@@ -11,7 +11,7 @@ async function makingResponse(data){
 }
 
 async function get(req, res) {
-    if (req.query.id===undefined && req.query.telegramID===undefined){
+    if (!req.query.id && !req.query.telegramID){
         await renderingJson(res, 400)
         return
     }
@@ -33,12 +33,18 @@ async function getAll(req, res){
 
 
 async function create(req, res){
-    const client = await clientModel.create_client(req.query.mail, req.query.telegramID, req.query.phoneNumber)
+    let client = null
+    if (req.query.mail || req.query.telegramID || req.query.phoneNumber) {
+        client = await clientModel.create_client(req.query.mail, req.query.telegramID, req.query.phoneNumber)
+    }
     await renderingJson(res, client?200:400,client?await makingResponse(client):[])
 }
 
 async function update(req, res){
-    const updateSuccess  = await clientModel.update_client(req.query.id, req.query.mail, req.query.telegramID, req.query.phoneNumber)
+    let updateSuccess = null
+    if (req.query.mail || req.query.telegramID || req.query.phoneNumber) {
+        updateSuccess = await clientModel.update_client(req.query.id, req.query.mail, req.query.telegramID, req.query.phoneNumber)
+    }
     await renderingJson(res, updateSuccess?200:updateSuccess===0?304:400)
 }
 
