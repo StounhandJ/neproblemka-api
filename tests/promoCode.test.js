@@ -1,7 +1,13 @@
-const request = require("supertest");
+const server = require("../index");
+const request = require("supertest").agent(server);
 const models = require("../models/index");
-const app = require("../index");
 jest.mock("../models/index")
+
+afterAll((done)=>{
+    server.close();
+    done();
+})
+
 describe('Promo Code Requests: ', function (){
 
     let promoID = 1
@@ -20,20 +26,22 @@ describe('Promo Code Requests: ', function (){
         models.promoCodeModel.update_promoCode.mockReturnValue(responseClient)
         models.promoCodeModel.get_promoCode_id.mockReturnValue(responseClient)
         models.promoCodeModel.get_promoCode_code.mockReturnValue(responseClient)
+        models.promoCodeModel.get_promoCodes.mockReturnValue([responseClient])
         // ---------------- //
-        }
+
+    }
     )
 
     it('defined', function(done) {
-        request(app).get("/promocode").expect(200).end(done)
-        request(app).get("/promocode.all").expect(200).end(done)
-        request(app).post("/promocode.create").expect(200).end(done)
-        request(app).post("/promocode.update").expect(200).end(done)
-        request(app).post("/promocode.del").expect(200).end(done)
+        request.get("/promocode").expect(200).end(done)
+        request.get("/promocode.all").expect(200).end(done)
+        request.post("/promocode.create").expect(200).end(done)
+        request.post("/promocode.update").expect(200).end(done)
+        request.post("/promocode.del").expect(200).end(done)
     })
 
     it('create', function(done) {
-        request(app).post("/promocode.create")
+        request.post("/promocode.create")
             .query({name:name,codeName:codeName,discount:discount,typeOfCode:typeOfCode,limitUsing:limitUsing})
             .expect((res) => {
                 expect(res.body.code).toEqual(200);
@@ -41,40 +49,189 @@ describe('Promo Code Requests: ', function (){
             .end(done);
     });
 
-     it('create err', function (done) {
-         request(app).post("/promocode.create")
+    it('create err', function (done) {
+        request.post("/promocode.create")
             .query({name:name,codeName:codeName,discount:discount,typeOfCode:typeOfCode})
-             .expect((res) => {
-                 expect(res.body.code).toEqual(400);
-         })
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
             .end(done);
 
-        request(app).post("/promocode.create")
+        request.post("/promocode.create")
             .query({name:name,codeName:codeName,discount:discount,limitUsing:limitUsing})
             .expect((res) => {
                 expect(res.body.code).toEqual(400);
             })
             .end(done);
 
-        request(app).post("/promocode.create")
+        request.post("/promocode.create")
             .query({name:name,codeName:codeName,typeOfCode:typeOfCode,limitUsing:limitUsing})
             .expect((res) => {
                 expect(res.body.code).toEqual(400);
             })
             .end(done);
 
-        request(app).post("/promocode.create")
+        request.post("/promocode.create")
             .query({name:name,discount:discount,typeOfCode:typeOfCode,limitUsing:limitUsing})
             .expect((res) => {
                 expect(res.body.code).toEqual(400);
             })
             .end(done);
 
-         request(app).post("/promocode.create")
-             .query({codeName:codeName,discount:discount,typeOfCode:typeOfCode,limitUsing:limitUsing})
-             .expect((res) => {
-                 expect(res.body.code).toEqual(400);
-             })
-             .end(done);
+        request.post("/promocode.create")
+            .query({codeName:codeName,discount:discount,typeOfCode:typeOfCode,limitUsing:limitUsing})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+    });
+
+    it('update', function(done) {
+        request.post("/promocode.update")
+            .query({id:promoID})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+
+        request.post("/promocode.update")
+            .query({id:promoID,name:name,codeName:codeName,discount:discount,typeOfCode:typeOfCode,limitUsing:limitUsing})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+
+        request.post("/promocode.update")
+            .query({id:promoID,name:name,limitUsing:limitUsing})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+
+        request.post("/promocode.update")
+            .query({id:promoID,codeName:codeName,typeOfCode:typeOfCode})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+    });
+
+    it('wrong one update', function(done) {
+        request.post("/promocode.update")
+            .query({codeName:codeName})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.post("/promocode.update")
+            .query({id:promoID,limitUsing:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.post("/promocode.update")
+            .query({discount:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+    });
+
+    it('get', function(done) {
+        request.get("/promocode")
+            .query({id:promoID})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+
+        request.get("/promocode")
+            .query({codeName:codeName})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+
+        request.get("/promocode")
+            .query({id:promoID, codeName:codeName})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+    });
+
+
+    it('wrong one get', function(done) {
+        request.get("/promocode")
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.get("/promocode")
+            .query({id:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+    });
+
+    it('del', function(done) {
+        request.post("/promocode.del")
+            .query({id:promoID})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+    });
+
+    it('wrong one del', function(done) {
+        request.post("/promocode.del")
+            .query()
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.post("/promocode.del")
+            .query({id:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+    });
+
+    it('all', function (done){
+       request.get("/promocode.all")
+           .query({limitUsing:limitUsing, limit:5,  offset:5})
+           .expect((res) => {
+               expect(res.body.code).toEqual(200);
+           })
+           .end(done);
+    });
+
+    it('all err', function (done){
+       request.get("/promocode.all")
+           .query({offset:"Строка"})
+           .expect((res) => {
+               expect(res.body.code).toEqual(400);
+           })
+           .end(done);
+
+       request.get("/promocode.all")
+           .query({limitUsing:"Строка"})
+           .expect((res) => {
+               expect(res.body.code).toEqual(400);
+           })
+           .end(done);
+
+       request.get("/promocode.all")
+           .query({limit:"Строка"})
+           .expect((res) => {
+               expect(res.body.code).toEqual(400);
+           })
+           .end(done);
     });
 });
