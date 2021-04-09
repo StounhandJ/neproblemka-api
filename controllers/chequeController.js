@@ -16,33 +16,16 @@ async function get(req, res) {
         await renderingJson(res, 400)
         return
     }
-    const cheque = req.query.id===undefined? await chequeModel.get_cheque_id(req.query.id):await chequeModel.get_cheque_secretKey(req.query.secretKey)
+    const cheque = req.query.id===undefined? await chequeModel.get_cheque_secretKey(req.query.secretKey): await chequeModel.get_cheque_id(req.query.id)
     await renderingJson(res, cheque?200:404, cheque?await makingResponse(cheque):[])
 }
 
-async function getAll(req, res){
-    const cheques = await chequeModel.get_cheques(req.query.id, req.query.active??0)
-    let result = []
-    if (cheques) {
-        for (const val of cheques) {
-            result.push(await makingResponse(val))
-        }
-    }
-    await renderingJson(res, cheques?200:404, result)
-}
-
-async function create(req, res){
-    const client = await chequeModel.create_cheque(req.query.idPaymentOrder, req.query.amount, req.query.secretKey)
-    await renderingJson(res, client?200:400,client?await makingResponse(client):[])
-}
-
-
 async function del(req, res){
-    await renderingJson(res, 200, await chequeModel.delete_cheque(req.query.id))
+    const cheque = await chequeModel.delete_cheque(req.query.id)
+    await renderingJson(res, cheque?200:400,cheque?await makingResponse(cheque):[])
 }
 
 module.exports = {
     get: get,
-    create: create,
     del: del
 }
