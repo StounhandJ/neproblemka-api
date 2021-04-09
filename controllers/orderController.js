@@ -35,6 +35,10 @@ async function makingResponse(data){
         description: data.description,
         document: document??null,
         typeWork:typeWork?typeWork.type:null,
+        price: data.price,
+        promoCodeID: data.promoCodeID,
+        otherDiscount: data.otherDiscount,
+        separate: data.separate,
         date: data.date,
         stateOfOrder: data.stateOfOrder
     }
@@ -98,6 +102,7 @@ async function chequeCreate(req, res){
     if (!order) {await renderingJson(res, 404, []); return;}
 
     await chequeModel.create_cheque(order.id, order.separate?order.price/2:order.price, req.query.secretKey)
+    await orderModel.update_order(req.query.id, order.separate?1:2)
 
     await renderingJson(res, 200, await makingResponse(order))
 }

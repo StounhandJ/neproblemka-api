@@ -36,6 +36,7 @@ async function create(req, res){
     let client = null
     if (req.query.mail || req.query.telegramID || req.query.phoneNumber) {
         client = await clientModel.create_client(req.query.mail, req.query.telegramID, req.query.phoneNumber)
+        client = client?await clientModel.get_client_id(client.id):client
     }
     await renderingJson(res, client?200:400,client?await makingResponse(client):[])
 }
