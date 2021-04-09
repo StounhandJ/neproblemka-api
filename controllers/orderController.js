@@ -31,7 +31,7 @@ async function makingResponse(data){
     const document = await documentModel.get_document(data.documentID)
     return {
         id: data.id,
-        idClient: client,
+        Client: client,
         description: data.description,
         document: document??null,
         typeWork:typeWork?typeWork.type:null,
@@ -107,12 +107,6 @@ async function chequeCreate(req, res){
     await renderingJson(res, 200, await makingResponse(order))
 }
 
-async function payment(req, res){
-    const cheque = await chequeModel.get_cheque_orderID(req.query.id)
-
-    await renderingJson(res, cheque?200:404, cheque)
-}
-
 async function chequeCompleted(req, res){
     const cheque = await chequeModel.get_cheque_secretKey(req.query.secretKey)
     if (!cheque) {await renderingJson(res, 404, []); return;}
@@ -147,7 +141,6 @@ module.exports = {
     getAll: getAll,
     create: create,
     priceSet: priceSet,
-    payment: payment,
     update: update,
     del: del,
     pass: pass,

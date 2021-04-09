@@ -1,6 +1,4 @@
 - [**cheque**](#-cheque) – *Получить чек*
-- [**cheque.all**](#-chequeall) – *Получить чеки*
-- [**cheque.create**](#-chequecreate) – *Создать чек*
 - [**cheque.del**](#-chequedel) – *Удалить чек*
 
 # Список методов:
@@ -28,68 +26,10 @@ secretKey | str | Секретный ключ
 ```
 {
     "id": 3,
-    "idPaymentOrder": 5,
+    "idOrder": 5,
     "amount": 17000,
     "date": 1243141214,
     "secretKey": gsdiohsdgo3s2shdv
-}
-```
-***
-
-
-
-## • cheque.all
-Получить чеки для оплаты заказа
-```js
-GET /cheque.all
-```
-
-### Все доступные параметры
-Параметр | Тип | Описание | По умолчанию
--- | -- | -- | --
-idPaymentOrder* | int | ID оплаты заказа
-active | str | Закончена ли оплата | 0
-
-*Возвращает все активные чеки оплаты, если не указан active*
-
-### Примеры запросов
-```js
-/cheque.all?idPaymentOrder=12
-```
-
-### Пример ответа
-```
-[
-    [Возвращаемые поля идентичны /cheque]
-]
-```
-***
-
-
-
-## • cheque.create
-Создать чек
-```js
-POST /cheque.create
-```
-
-### Все доступные параметры
-Параметр | Тип | Описание | По умолчанию
--- | -- | -- | --
-idPaymentOrder* | int | ID оплаты заказа
-amount* | int | Сумма оплаты
-secretKey* | str | Секретный ключ
-
-
-### Примеры запросов
-```js
-/cheque.create?idPaymentOrder=10&amount=7000&secretKey=sgo13hii14hl
-```
-
-### Пример ответа
-```
-{
-    [Возвращаемые поля идентичны /cheque]
 }
 ```
 ***

@@ -30,11 +30,11 @@ codeName | str | Промокод
 {
     "id": 3,
     "name": "Лучший промокод",
-    "code":"bigDiscount",
-    "discount":35,
-    "typeOfCode":1,
-    "limitUsing":15,
-    "info":35%
+    "code": "bigDiscount",
+    "discount": 35,
+    "typeOfCode": 1,
+    "limitUsing": 15,
+    "info": "35%"
 }
 ```
 ***
@@ -54,7 +54,6 @@ limitUsing | int | Количество использований
 offset | int | Смещение возврата 
 limit | int | Сколько вернуть
 
-*В разработке*
 
 ### Примеры запросов
 ```js
@@ -83,7 +82,7 @@ POST /promocode.create
 name* | str | Имя промокода 
 codeName* | str | Код промокода
 discount* | int | Скидка
-typeOfCode* | int | Тип кода
+typeOfCode* | int[0,1] | Тип кода
 limitUsing* | int | Количество
 
 ### Примеры запросов
@@ -114,7 +113,7 @@ id* | int | ID промокода
 name | str | Имя промокода
 codeName | str | Код промокода
 discount | int | Скидка
-typeOfCode | int | Тип кода
+typeOfCode | int[0,1] | Тип кода
 limitUsing | int | Количество
 
 *Минимум один параметр должен передаваться для обновления*

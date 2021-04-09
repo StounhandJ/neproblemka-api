@@ -4,7 +4,7 @@ const renderingJson = require('../lib/View').renderingJson
 async function makingResponse(data){
     return {
         id: data.id,
-        idPaymentOrder: data.idPaymentOrder,
+        idOrder: data.idOrder,
         amount: data.amount,
         date: data.date,
         secretKey: data.secretKey

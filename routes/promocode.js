@@ -19,7 +19,7 @@ router.post('/promocode.create', validate([
     query('name').isString(),
     query('codeName').isString(),
     query('discount').isInt(),
-    query('typeOfCode').isInt(),
+    query('typeOfCode').isInt({min:0,max:1}),
     query('limitUsing').isInt()   
 ]), promoCodeController.create)
 
@@ -28,7 +28,7 @@ router.post('/promocode.update', validate([
     query('name').isString().optional(),
     query('codeName').isString().optional(),
     query('discount').isInt().optional(),
-    query('typeOfCode').isInt().optional(),
+    query('typeOfCode').isInt({min:0,max:1}).optional(),
     query('limitUsing').isInt().optional() 
 
 ]), promoCodeController.update)

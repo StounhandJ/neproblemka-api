@@ -24,7 +24,7 @@ router.post('/order.create', validate([
     query('typeWork').isString(),
     query('promoCodeID').isInt().optional(),
     query('otherDiscount').isInt(),
-    query('separate').isInt(),
+    query('separate').isInt({min: 0, max: 1}),
     query('docTelegID').isString().optional(),
 ]), upload.any(), orderController.create)
 
@@ -38,18 +38,9 @@ router.post('/order.chequeCreate', validate([
     query('secretKey').isString(),
 ]), orderController.chequeCreate)
 
-router.post('/order.payment', validate([
-    query('id').isInt(),
-]), orderController.payment)
-
 router.post('/order.chequeCompleted', validate([
     query('secretKey').isString(),
 ]), orderController.chequeCompleted)
-
-// router.post('/order.update', validate([
-//     query('id').isInt(),
-//     query('stateOfOrder').isInt()
-// ]), orderController.update)
 
 router.post('/order.del', validate([
     query('id').isInt()
