@@ -77,7 +77,7 @@ async function priceSet(req, res){
     let typeOfCode = 0;
     let discount = 0;
     if (order.promoCodeID){
-        const promoCode = await promoCodeModel.get_promoCode_id(paymentOrder.promoCodeID)
+        const promoCode = await promoCodeModel.get_promoCode_id(order.promoCodeID)
         typeOfCode = promoCode.typeOfCode
         discount = promoCode.discount
     }
@@ -102,9 +102,11 @@ async function chequeCreate(req, res){
     if (!order) {await renderingJson(res, 404, []); return;}
 
     await chequeModel.create_cheque(order.id, order.separate?order.price/2:order.price, req.query.secretKey)
-    await orderModel.update_order(req.query.id, order.separate?1:2)
-
-    await renderingJson(res, 200, await makingResponse(order))
+    let stateOfOrder;
+    if (order.stateOfOrder<11) stateOfOrder = order.separate?2:1
+    else stateOfOrder = order.stateOfOrder===12?1:-1;
+    await orderModel.update_order(req.query.id, stateOfOrder)
+    await renderingJson(res, 200, order.separate?Math.round(order.price/2):order.price)
 }
 
 async function chequeCompleted(req, res){
