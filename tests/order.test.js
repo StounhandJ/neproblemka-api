@@ -30,6 +30,7 @@ let responseOrder = {
 // ----Заглушки---- //
 models.orderModel.get_order.mockImplementation(idIN=> idIN==id?responseOrder:null)
 models.orderModel.get_order.mockImplementation(idIN=> idIN==id?responseOrder:null)
+models.orderModel.get_orders.mockImplementation((idClientIN, typeWorkIDIN, stateOfOrderIN, offsetIN, limitIN)=> !offsetIN || offsetIN<15?[responseOrder]:null)
 models.orderModel.delete_order.mockReturnValue(responseOrder)
 
 // ---------------- //
@@ -79,6 +80,63 @@ describe('GET: ', function() {
     it('correct', function(done) {
         request.get("/order")
             .query({id:id})
+            .expect((res) => {
+                expect(res.body.code).toEqual(200);
+            })
+            .end(done);
+    });
+})
+
+
+describe('GET ALL: ', function() {
+    it('invalid values', function(done) {
+        request.get("/order.all")
+            .query({idClient:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.get("/order.all")
+            .query({typeWorkID:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.get("/order.all")
+            .query({stateOfOrder:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.get("/order.all")
+            .query({offset:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+
+        request.get("/order.all")
+            .query({limit:"Строка"})
+            .expect((res) => {
+                expect(res.body.code).toEqual(400);
+            })
+            .end(done);
+    })
+
+    it('well an existing cheque', function(done) {
+        request.get("/order.all")
+            .query({offset:20})
+            .expect((res) => {
+                expect(res.body.code).toEqual(404);
+            })
+            .end(done);
+    })
+
+    it('correct', function(done) {
+        request.get("/order.all")
             .expect((res) => {
                 expect(res.body.code).toEqual(200);
             })
