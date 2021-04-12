@@ -82,7 +82,7 @@ async function priceSet(req, res){
         discount = promoCode.discount
     }
     // Скидка от промокода
-    price = price - (typeOfCode && discount !== 0?price / 100 * discount : discount)
+    price = price - (typeOfCode && discount !== 0?price / 100 * discount : discount*100)
     // Дополнительная скидка
     price = price - (otherDiscount !== 0?price / 100 * otherDiscount : 0)
     if (price>=1000) {
