@@ -92,14 +92,18 @@ describe('GET: ', function() {
 })
 
 describe('GET ALL: ', function() {
-    it('correct', function(done) {
-        models.clientModel.get_clients.mockReturnValueOnce(null).mockReturnValueOnce([responseClient])
+    it('correct there are clients', function(done) {
+        models.clientModel.get_clients.mockReturnValueOnce(null)
         request.get("/client.all")
             .query({id:id})
             .expect((res) => {
                 expect(res.body.code).toEqual(404);
             })
             .end(done);
+    });
+
+    it('correct no customers', function(done) {
+        models.clientModel.get_clients.mockReturnValueOnce([responseClient])
 
         request.get("/client.all")
             .query({telegramID:telegramID})
